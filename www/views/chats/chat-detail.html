@@ -1,5 +1,5 @@
-<ion-view view-title="채팅">
-  <ion-content>
+<ion-view view-title="{{chatRoom.name}}">
+  <ion-content class="padding">
     <ion-scroll>
       <div class="chatContent">
         <p  ng-repeat="m in messages">{{m.text}}</p>
@@ -16,9 +16,3 @@
     </div>
   </ion-content>
 </ion-view>
-
-
-<!-- <label class="item item-input">
-  <input type="text" ng-model="messageText">
-  <button class="button button-small button-positive" ng-click="sendMessage()">전송</button>
-</label> -->

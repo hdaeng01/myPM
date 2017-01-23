@@ -1,6 +1,20 @@
 angular.module('App')
-.controller('ChatController', function($scope, $ionicScrollDelegate, mySocket) {
+.controller('ChatsCtrl', function($scope, $stateParams, Chats) {
+  $scope.chats = Chats.all();
+  $scope.remove = function(chat) {
+    Chats.remove(chat);
+  };
+})
+
+.controller('ChatDetailCtrl', function($scope, $ionicScrollDelegate, $stateParams, Chats, mySocket) {
   $scope.messages = [];
+  $scope.chatRoom = Chats.get($stateParams.chatId);
+  function joinRoom(){
+    mySocket.emit('joinRoom',$scope.chatRoom.id);
+  }
+  joinRoom();
+
+  console.log($scope.chatRoom.id);
 
   mySocket.on('chatMessage', function(message){
     $scope.messages.push(message);
@@ -21,7 +35,7 @@ angular.module('App')
     this.messageText = '';
   }
 
-  $scope.$on('$destroy', function(){
+  mySocket.on('$destroy', function(){
     mySocket.removeListener('chatMessage');
   });
 });

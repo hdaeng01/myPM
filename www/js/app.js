@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('App', ['ionic','btford.socket-io'])
+angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -28,58 +28,34 @@ angular.module('App', ['ionic','btford.socket-io'])
   $stateProvider
     .state('tabs', {
       url: '/tabs',
+      abstract: true,
       templateUrl: 'views/tabs/tabs.html'
     })
     .state('tabs.board', {
       url: '/board',
       views: {
-        'board-tab': {
+        'tab-board': {
           templateUrl: 'views/board/board.html'
         }
       }
     })
-    .state('tabs.chat', {
-      url: '/chat',
+    .state('tabs.chats', {
+      url: '/chats',
       views: {
-        'chat-tab': {
-          templateUrl: 'views/chat/chat.html',
-          controller: 'ChatController'
+        'tab-chats': {
+          templateUrl: 'views/chats/tab-chats.html',
+          controller: 'ChatsCtrl'
         }
       }
     })
-  $urlRouterProvider.otherwise('/tabs');
+    .state('tabs.chat-detail', {
+      url: '/chats/:chatId',
+      views: {
+        'tab-chats': {
+          templateUrl: 'views/chats/chat-detail.html',
+          controller: 'ChatDetailCtrl'
+        }
+      }
+    })
+  $urlRouterProvider.otherwise('/tabs/board');
 })
-
-.factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.1.100:8080');
-
-  mySocket = socketFactory({
-    ioSocket: myIoSocket
-  });
-
-  return mySocket;
-})
-
-.directive('focusMe', function($timeout) {
-  return {
-    link: function(scope, element, attrs) {
-
-      $timeout(function() {
-        element[0].focus();
-      });
-    }
-  };
-});
-// .factory('focus', function($timeout, $window) {
-//     return function(id) {
-//       // timeout makes sure that it is invoked after any other event has been triggered.
-//       // e.g. click events that need to run before the focus or
-//       // inputs elements that are in a disabled state but are enabled when those events
-//       // are triggered.
-//       $timeout(function() {
-//         var element = $window.document.getElementById(id);
-//         if(element)
-//           element.focus();
-//       });
-//     };
-//   })
