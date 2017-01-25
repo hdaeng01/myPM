@@ -1,0 +1,18 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">프로젝트 이름</h1>
+    <button class="button button-clear" ng-click="hideModal()">
+      <span class="icon ion-close"></span>
+    </button>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="createRoom()">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" ng-model="roomName" placeholder="방이름">
+        </label>
+        <button class="button button-block button-positive" type="submit">생성</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

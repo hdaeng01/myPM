@@ -32,10 +32,11 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
       templateUrl: 'views/tabs/tabs.html'
     })
     .state('tabs.board', {
-      url: '/board',
+      url: '/board/chatId',
       views: {
         'tab-board': {
-          templateUrl: 'views/board/board.html'
+          templateUrl: 'views/board/board.html',
+          controller: 'BoardCtrl'
         }
       }
     })
@@ -57,5 +58,10 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
         }
       }
     })
-  $urlRouterProvider.otherwise('/tabs/board');
+    .state('main', {
+      url: '/main',
+      templateUrl: 'views/main/main.html',
+      controller: 'MainCtrl'
+    })
+  $urlRouterProvider.otherwise('/main');
 })
