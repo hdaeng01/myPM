@@ -41,6 +41,15 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
         }
       }
     })
+    .state('tabs.board-detail', {
+      url: '/board/board-detail/:boardId',
+      views: {
+        'tab-board': {
+          templateUrl: 'views/board/board-detail.html',
+          controller: 'BoardCtrl'
+        }
+      }
+    })
     .state('tabs.chats', {
       url: '/chats/:chatId',
       views: {

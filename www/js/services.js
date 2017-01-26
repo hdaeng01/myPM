@@ -74,4 +74,64 @@ angular.module('App.services', [])
         return roomId;
       }
   };
-});
+})
+
+.factory('Boards', function() {
+  var boards = [{
+      id: 0,
+      name:'황정우',
+      title: 'html 질문좀여',
+      time: '17.01.26 15:40',
+      hits: '3',
+      content:'가나다라마바사....'
+    }, {
+      id: 1,
+      name:'송주용',
+      title: 'nodejs 질문좀여',
+      time: '17.01.25 13:10',
+      hits: '6',
+      content:'가나다라마바사....'
+    }, {
+      id: 2,
+      name:'류성진',
+      title: 'express 질문좀여',
+      time: '17.01.24 08:22',
+      hits: '7',
+      content:'가나다라마바사....'
+    }, {
+      id: 3,
+      name:'임종묵',
+      title: 'css 질문좀여',
+      time: '17.01.22 11:12',
+      hits: '8',
+      content:'가나다라마바사....'
+    }, {
+      id: 4,
+      name:'양석',
+      title: 'javascript 질문좀여',
+      time: '17.01.20 19:36',
+      hits: '9',
+      content:'가나다라마바사....'
+    }
+  ];
+
+  return {
+    all: function() {
+      return boards;
+    },
+    remove: function(chat) {
+      boards.splice(boards.indexOf(chat), 1);
+    },
+    get: function(boardId) {
+      for (var i = 0; i < boards.length; i++) {
+        if (boards[i].id === parseInt(boardId)) {
+          return boards[i];
+        }
+      }
+      return null;
+    }
+    // add: function(name,id){
+    //   boards.push({id:id, name:name, face:'img/'+name+'.png'});
+    // }
+  };
+})

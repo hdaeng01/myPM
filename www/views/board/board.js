@@ -1,5 +1,7 @@
 angular.module('App')
-.controller('BoardCtrl', function($scope, $stateParams, Chats) {
+.controller('BoardCtrl', function($scope, $stateParams, Chats, Boards) {
   $scope.chatRoom = Chats.get($stateParams.chatId);
-  // console.log($scope.chatRoom.id);
+  $scope.board = Boards.get($stateParams.boardId);
+  $scope.boards = Boards.all();
+
 });

@@ -1,4 +1,12 @@
 <ion-view view-title="{{chatRoom.name}}">
   <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="b in boards" type="item-text-wrap" href="#/tabs/board/board-detail/{{b.id}}">
+        <h2>{{b.title}}</h2>
+        <h3>{{b.name}}</h3>
+        <p>{{b.time}}</p>
+        <p>조회수 : {{b.hits}}</p>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>
