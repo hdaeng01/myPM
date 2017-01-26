@@ -29,10 +29,11 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
     .state('tabs', {
       url: '/tabs',
       abstract: true,
-      templateUrl: 'views/tabs/tabs.html'
+      templateUrl: 'views/tabs/tabs.html',
+      controller: 'TabCtrl'
     })
     .state('tabs.board', {
-      url: '/board/chatId',
+      url: '/board/:chatId',
       views: {
         'tab-board': {
           templateUrl: 'views/board/board.html',
@@ -41,7 +42,7 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
       }
     })
     .state('tabs.chats', {
-      url: '/chats',
+      url: '/chats/:chatId',
       views: {
         'tab-chats': {
           templateUrl: 'views/chats/tab-chats.html',
@@ -49,15 +50,15 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
         }
       }
     })
-    .state('tabs.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'views/chats/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
+    // .state('tabs.chat-detail', {
+    //   url: '/chats/:chatId',
+    //   views: {
+    //     'tab-chats': {
+    //       templateUrl: 'views/chats/chat-detail.html',
+    //       controller: 'ChatDetailCtrl'
+    //     }
+    //   }
+    // })
     .state('main', {
       url: '/main',
       templateUrl: 'views/main/main.html',

@@ -1,16 +1,23 @@
-<ion-view view-title="채팅">
-  <ion-content>
-    <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tabs/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
+<ion-view view-title="{{chatRoom.name}}">
+  <ion-nav-back-buttons side="left">
+    <button class="button button-clear">
+      <span class="icon ion-arrow-left-a"></span>
+    </button>
+  </ion-nav-back-buttons>
+  <ion-content class="padding">
+    <ion-scroll>
+      <div class="chatContent">
+        <p  ng-repeat="m in messages">{{m.text}}</p>
+      </div>
+    </ion-scroll>
 
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
-          Delete
-        </ion-option-button>
-      </ion-item>
-    </ion-list>
+    <div class="list">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" ng-model="messageText"/>
+        </label>
+        <button class="button button-small button-positive" ng-click="sendMessage()">전송 </button>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

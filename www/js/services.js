@@ -2,7 +2,7 @@ angular.module('App.services', [])
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
-
+  
   // Some fake testing data
   var chats = [//{
   //   id: 0,
@@ -54,7 +54,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://localhost:8080');
+  var myIoSocket = io.connect('http://192.168.1.101:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
