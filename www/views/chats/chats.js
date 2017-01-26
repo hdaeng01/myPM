@@ -1,13 +1,11 @@
 angular.module('App')
-.controller('ChatsCtrl', function($scope, $stateParams, Chats) {
+.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, Chats, mySocket) {
   $scope.messages = [];
   $scope.chatRoom = Chats.get($stateParams.chatId);
   function joinRoom(){
     mySocket.emit('joinRoom',$scope.chatRoom.id);
   }
   joinRoom();
-
-  console.log($scope.chatRoom.id);
 
   mySocket.on('chatMessage', function(message){
     $scope.messages.push(message);

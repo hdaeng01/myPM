@@ -2,7 +2,7 @@ angular.module('App.services', [])
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
-  
+
   // Some fake testing data
   var chats = [//{
   //   id: 0,
@@ -61,4 +61,17 @@ angular.module('App.services', [])
   });
 
   return mySocket;
+})
+
+.factory('getRoomId', function() {
+  var roomId = ' ';
+
+  return {
+      add : function(room_id){
+        roomId = room_id;
+      },
+      get : function(){
+        return roomId;
+      }
+  };
 });

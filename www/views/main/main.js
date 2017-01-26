@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, getRoomId) {
   $scope.roomName='';
 
   $scope.showModal = function(){
@@ -26,6 +26,7 @@ angular.module('App')
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
     Chats.add($scope.roomName,1);
+    getRoomId.add(1);
     $scope.hideModal();
   };
 
