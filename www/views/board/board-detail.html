@@ -1,14 +1,28 @@
 <ion-view view-title="{{chatRoom.name}}">
   <ion-content>
     <ion-list>
+      <div class="item item-divider">글정보</div>
       <ion-item class="item-remove-animate item-avatar item-icon-right" type="item-text-wrap">
         <h2>{{board.title}}</h2>
         <h3>{{board.name}}</h3>
         <p>{{board.time}}</p>
         <p>조회수 : {{board.hits}}</p>
       </ion-item>
+
+      <div class="item item-divider">내용</div>
       <ion-item>
         <h3>{{board.content}}</h3>
+      </ion-item>
+
+      <div class="item item-divider">댓글</div>
+      <ion-item>
+        <textarea placeholder="댓글을 달아주세요." ng-model="comment" rows="5" cols="40"></textarea>
+        <button class="button button-block button-positive" ng-click="add()">댓글달기</button>
+      </ion-item>
+
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="comment in comments" type="item-text-wrap">
+        <h3>{{comment.name}}</h3>
+        <p>{{comment.content}}</p>
       </ion-item>
     </ion-list>
   </ion-content>

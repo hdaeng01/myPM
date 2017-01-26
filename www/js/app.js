@@ -46,7 +46,7 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
       views: {
         'tab-board': {
           templateUrl: 'views/board/board-detail.html',
-          controller: 'BoardCtrl'
+          controller: 'BoardDetailCtrl'
         }
       }
     })

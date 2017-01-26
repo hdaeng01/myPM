@@ -54,7 +54,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.1.101:8080');
+  var myIoSocket = io.connect('http://192.168.1.100:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -83,35 +83,115 @@ angular.module('App.services', [])
       title: 'html 질문좀여',
       time: '17.01.26 15:40',
       hits: '3',
-      content:'가나다라마바사....'
+      content:'가나다라마바사....',
+      comments:[{
+        name : '송주용',
+        content: '댓글 1'
+      },
+      {
+        name : '임종묵',
+        content: '댓글 2'
+      },
+      {
+        name : '양석',
+        content: '댓글 3'
+      },
+      {
+        name : '김태완',
+        content: '댓글 4'
+      }]
     }, {
       id: 1,
       name:'송주용',
       title: 'nodejs 질문좀여',
       time: '17.01.25 13:10',
       hits: '6',
-      content:'가나다라마바사....'
+      content:'가나다라마바사....',
+      comments:[{
+        name : '황정우',
+        content: '댓글 1'
+      },
+      {
+        name : '임종묵',
+        content: '댓글 2'
+      },
+      {
+        name : '김태완',
+        content: '댓글 3'
+      },
+      {
+        name : '김상혁',
+        content: '댓글 4'
+      }]
     }, {
       id: 2,
       name:'류성진',
       title: 'express 질문좀여',
       time: '17.01.24 08:22',
       hits: '7',
-      content:'가나다라마바사....'
+      content:'가나다라마바사....',
+      comments:[{
+        name : '황정우',
+        content: '댓글 1'
+      },
+      {
+        name : '양석',
+        content: '댓글 2'
+      },
+      {
+        name : '송주용',
+        content: '댓글 3'
+      },
+      {
+        name : '김태완',
+        content: '댓글 4'
+      }]
     }, {
       id: 3,
       name:'임종묵',
       title: 'css 질문좀여',
       time: '17.01.22 11:12',
       hits: '8',
-      content:'가나다라마바사....'
+      content:'가나다라마바사....',
+      comments:[{
+        name : '황정우',
+        content: '댓글 1'
+      },
+      {
+        name : '김태완',
+        content: '댓글 2'
+      },
+      {
+        name : '성수현',
+        content: '댓글 3'
+      },
+      {
+        name : '김상혁',
+        content: '댓글 4'
+      }]
     }, {
       id: 4,
       name:'양석',
       title: 'javascript 질문좀여',
       time: '17.01.20 19:36',
       hits: '9',
-      content:'가나다라마바사....'
+      content:'가나다라마바사....',
+      comments:[{
+        name : '황정우',
+        content: '댓글 1'
+      },
+      {
+        name : '송주용',
+        content: '댓글 2'
+      },
+      {
+        name : '성수현',
+        content: '댓글 3'
+      },
+      {
+        name : '김상혁',
+        content: '댓글 4'
+      }]
     }
   ];
 

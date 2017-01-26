@@ -4,4 +4,15 @@ angular.module('App')
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boards = Boards.all();
 
+})
+
+.controller('BoardDetailCtrl', function($scope, $stateParams, Boards) {
+  $scope.board = Boards.get($stateParams.boardId);
+  $scope.comments = $scope.board.comments;
+
+  $scope.add = function(){
+    $scope.comment = this.comment;
+    $scope.board.comments.push({name:'익명',content:$scope.comment});
+    this.comment = ' ';
+  }
 });
