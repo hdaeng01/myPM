@@ -1,0 +1,21 @@
+<ion-view hide-nav-bar="true">
+  <ion-content>
+    <div class="list" id="login" style=" background-color:#fff; padding:15% 15% 15% 15%">
+      <h2 style="text-align:center;">Login</h2>
+      <form ng-submit="doSubmit()">
+        <label class="item item-input item-floating-label">
+          <input type="text" placeholder="id" ng-model="id">
+        </label>
+        <label class="item item-input item-floating-label">
+          <input type="password" placeholder="password" ng-model="password">
+        </label>
+        <button class="button button-block button-positive" type="submit">login</button>
+        <button class="button button-block button-positive">register</button>
+      </form>
+      <div class="button-bar" title="Login with">
+        <a class="button button-icon icon ion-social-facebook"></a>
+        <a class="button button-icon icon ion-social-googleplus"></a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

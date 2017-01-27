@@ -25,8 +25,8 @@ angular.module('App')
 
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
-    Chats.add($scope.roomName,1);
-    getRoomId.add(1);
+    Chats.add($scope.roomName,0);
+    getRoomId.add(0);
     $scope.hideModal();
   };
 
