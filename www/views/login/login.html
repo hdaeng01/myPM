@@ -4,13 +4,13 @@
       <h2 style="text-align:center;">Login</h2>
       <form ng-submit="doSubmit()">
         <label class="item item-input item-floating-label">
-          <input type="text" placeholder="id" ng-model="id">
+          <input type="text" placeholder="id" ng-model="username">
         </label>
         <label class="item item-input item-floating-label">
           <input type="password" placeholder="password" ng-model="password">
         </label>
         <button class="button button-block button-positive" type="submit">login</button>
-        <button class="button button-block button-positive">register</button>
+        <button class="button button-block button-positive" ng-click="showModal()">register</button>
       </form>
       <div class="button-bar" title="Login with">
         <a class="button button-icon icon ion-social-facebook"></a>

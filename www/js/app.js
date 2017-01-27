@@ -78,5 +78,5 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io'])
       templateUrl: 'views/login/login.html',
       controller: 'LoginCtrl'
     })
-  $urlRouterProvider.otherwise('/main');
+  $urlRouterProvider.otherwise('/login');
 })
