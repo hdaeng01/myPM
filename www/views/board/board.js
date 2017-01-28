@@ -1,12 +1,13 @@
 angular.module('App')
-.controller('BoardCtrl', function($scope, $stateParams, Chats, Boards) {
+.controller('BoardCtrl', function($scope, $stateParams, Chats, Boards, $ionicNavBarDelegate) {
   $scope.chatRoom = Chats.get($stateParams.chatId);
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boards = Boards.all();
 
 })
 
-.controller('BoardDetailCtrl', function($scope, $stateParams, Boards) {
+.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicNavBarDelegate, Boards) {
+  $ionicNavBarDelegate.showBackButton(true);
   $scope.board = Boards.get($stateParams.boardId);
   $scope.comments = $scope.board.comments;
 

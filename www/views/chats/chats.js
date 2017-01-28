@@ -1,5 +1,6 @@
 angular.module('App')
 .controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, Chats, mySocket) {
+  $ionicNavBarDelegate.showBackButton(true);
   $scope.messages = [];
   $scope.chatRoom = Chats.get($stateParams.chatId);
   function joinRoom(){

@@ -4,32 +4,23 @@
   "proxies": [
     {
       "path": "/register",
-      "proxyUrl": "http://172.30.101.46:8080/auth/register/"
+      "proxyUrl": "http://192.168.0.4:8080/auth/register/"
     },
     {
       "path": "/login",
-      "proxyUrl": "http://172.30.101.46:8080/auth/login/"
+      "proxyUrl": "http://192.168.0.4:8080/auth/login/"
     },
     {
       "path": "/welcome",
-      "proxyUrl": "http://172.30.101.46:8080/welcome/"
+      "proxyUrl": "http://192.168.0.4:8080/welcome/"
     },
     {
       "path": "/loginError",
-      "proxyUrl": "http://172.30.101.46:8080/loginError/"
+      "proxyUrl": "http://192.168.0.4:8080/loginError/"
     },
     {
       "path": "/logFacebook",
-      "proxyUrl": "http://172.30.101.46:8080/auth/facebook/"
-    },{
-      "path": "/logFacebookRedirect",
-      "proxyUrl": "https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=http%3A%2F%2F172.30.101.46%3A8080%2Fauth%2Ffacebook%2Fcallback&scope=email&client_id=1165650960200214/"
-    },{
-      "path": "/logFacebookCallback",
-      "proxyUrl": "http://172.30.101.46:8080/auth/facebook/callback/"
-    },{
-      "path": "/logFacebookCalasdfasdflback",
-      "proxyUrl": "https://www.facebook.com/login.php?skip_api_login=1&api_key=1165650960200214&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fv2.8%2Fdialog%2Foauth%3Fredirect_uri%3Dhttp%253A%252F%252F172.30.101.46%253A8080%252Fauth%252Ffacebook%252Fcallback%26scope%3Demail%26response_type%3Dcode%26client_id%3D1165650960200214%26ret%3Dlogin%26logger_id%3Dd0186eb5-954e-414d-9fb4-cd53260ddd17&cancel_url=http%3A%2F%2F172.30.101.46%3A8080%2Fauth%2Ffacebook%2Fcallback%3Ferror%3Daccess_denied%26error_code%3D200%26error_description%3DPermissions%2Berror%26error_reason%3Duser_denied%23_%3D_&display=page&locale=ko_KR&logger_id=d0186eb5-954e-414d-9fb4-cd53260ddd17"
+      "proxyUrl": "http://192.168.0.4:8080/auth/facebook/"
     }
   ]
 }

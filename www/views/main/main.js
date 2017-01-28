@@ -1,6 +1,7 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, getRoomId) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, getRoomId, $ionicNavBarDelegate) {
   $scope.roomName='';
+  $ionicNavBarDelegate.showBackButton(false);
 
   $scope.showModal = function(){
     if ($scope.modal) {

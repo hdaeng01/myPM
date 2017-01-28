@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal) {
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state) {
   $scope.showModal = function(){
     if ($scope.modal) {
       $scope.modal.show();
@@ -43,8 +43,6 @@ angular.module('App')
       } else if (response == 'notFullfill') {
         alert('모두 기입해주세요.');
       }
-    }).finally(function() {
-        console.log('Complete');
     });
 
     $scope.hideModal();
@@ -66,12 +64,10 @@ angular.module('App')
     }
     }).success(function(response) {
       if (response == 'welcome') {
-        alert('로그인 성공');
+        $state.go("main");
       } else if (response == '해당정보없음') {
         alert('해당정보 없음.');
       }
-    }).finally(function() {
-        console.log('Complete');
     });
   }
 
