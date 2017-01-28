@@ -58,20 +58,33 @@ angular.module('App')
     method: 'POST' ,
     url: '/login/',
     data: {
-        username: $scope.username,
-        password: $scope.password
+      username: $scope.username,
+      password: $scope.password
     },
     headers: {
-        'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     }
     }).success(function(response) {
       if (response == 'welcome') {
         alert('로그인 성공');
-      } else if (response == 'notFullfill') {
-        alert('모두 기입해주세요.');
+      } else if (response == '해당정보없음') {
+        alert('해당정보 없음.');
       }
     }).finally(function() {
         console.log('Complete');
     });
+  }
+
+  $scope.logFacebook = function(){
+    $http.get('/logFacebook/').success(
+			function(data)
+			{
+        if (data == 'welcome') {
+          alert('로그인 성공');
+        } else if (data == '해당정보없음') {
+          alert('해당정보 없음.');
+        }
+			}
+    );
   }
 })
