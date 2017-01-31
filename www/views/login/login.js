@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state) {
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, getMyInfo) {
   $scope.showModal = function(){
     if ($scope.modal) {
       $scope.modal.show();
@@ -63,10 +63,11 @@ angular.module('App')
       'Content-Type': 'application/json'
     }
     }).success(function(response) {
-      if (response == 'welcome') {
-        $state.go("main");
-      } else if (response == '해당정보없음') {
+      if (response == '해당정보없음') {
         alert('해당정보 없음.');
+      } else {
+        getMyInfo.insertName(response);
+        $state.go("main");
       }
     });
   }

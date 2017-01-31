@@ -41,7 +41,7 @@ angular.module('App.services', [])
     },
     get: function(chatId) {
       for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
+        if (chats[i].id === chatId) {
           return chats[i];
         }
       }
@@ -214,4 +214,17 @@ angular.module('App.services', [])
     //   boards.push({id:id, name:name, face:'img/'+name+'.png'});
     // }
   };
+})
+
+.factory('getMyInfo', function() {
+  var name;
+
+  return {
+    insertName: function(displayName){
+      name=displayName;
+    },
+    get: function(){
+      return name;
+    }
+  }
 })

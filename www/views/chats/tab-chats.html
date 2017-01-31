@@ -7,7 +7,7 @@
   <ion-content class="padding">
     <ion-scroll>
       <div class="chatContent">
-        <p  ng-repeat="m in messages">{{m.text}}</p>
+        <p  ng-repeat="m in messages">{{m.sender}} : {{m.chatContent}}</p>
       </div>
     </ion-scroll>
 
