@@ -28,8 +28,7 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script src="js/ng-cordova-master/dist/ng-cordova.min.js"></script>
-    <script src="js/ng-cordova-master/dist/ng-cordova.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
 
     <script src="lib/angular-socket-io/socket.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
@@ -42,6 +41,7 @@
     <script src="views/main/main.js"></script>
     <script src="views/tabs/tabs.js"></script>
     <script src="views/login/login.js"></script>
+    <script src="views/search/search.js"></script>
   </head>
   <body ng-app="App">
     <ion-side-menus>
@@ -66,10 +66,10 @@
         </ion-header-bar>
         <ion-content>
           <ion-list>
-            <ion-item class="item-icon-left" href="/#/main" menu-close>
+            <ion-item class="item-icon-left" href="#/main" menu-close>
               <span class="icon ion-home"></span>홈
             </ion-item>
-            <ion-item class="item-icon-left" ui-sref="search" menu-close>
+            <ion-item class="item-icon-left" href="#/search" menu-close>
               <span class="icon ion-search"></span>방찾기
             </ion-item>
             <ion-item class="item-icon-left" ui-sref="search" menu-close>

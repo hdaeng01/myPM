@@ -1,3 +1,7 @@
 .chatContent {
   height: 400px;
 }
+
+#projectNum {
+  display: inline;
+}

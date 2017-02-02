@@ -1,22 +1,22 @@
 angular.module('App')
-.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, Chats, mySocket, getMyInfo, $cordovaSQLite) {
+.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $cordovaFile, Chats, mySocket, getMyInfo, getRoomId) {
   $scope.messages = [];
-  $scope.chatRoom = Chats.get($stateParams.chatId);
+  getRoomId.add($stateParams.chatId);
+  $scope.chatRoom = Chats.get(getRoomId.get());
+  mySocket.emit('joinRoom',getRoomId.get());
 
-  // var sql = "SELECT sender, chatContent FROM chats WHERE id = ?";
-  // $cordovaSQLite.execute(db, sql, [$scope.chatRoom.id]).then(function(res) {
-  //     if(res.rows.length > 0) {
-  //         console.log("SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname);
-  //         for (var i = 0; i < res.rows.length; i++) {
-  //           messages.push(res.rows[i]);
-  //         }
-  //         mySocket.emit('joinRoom',$scope.chatRoom.id);
-  //     } else {
-  //         console.log("No results found");
-  //     }
-  // }, function (err) {
-  //     console.error(err);
-  // });
+  $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".txt")
+    .then(function (success) {
+      // success
+      var contents=success.split('\n');
+      if (contents.length>2) {
+        for (var i = 1; i < contents.length-2; i+=2) {
+          $scope.messages.push({sender:contents[i],chatContent:contents[i+1]});
+        }
+      }
+    }, function (error) {
+      // error
+    });
 
   mySocket.on('chatMessage', function(message){
     $scope.messages.push(message);
@@ -29,23 +29,31 @@ angular.module('App')
 
   $scope.sendMessage = function(){
     var message = {
+      roomId: getRoomId.get(),
       sender: getMyInfo.get(),
       chatContent: this.messageText
     };
-
-    // var sql = "INSERT INTO chats VALUES (?)";
-    // $cordovaSQLite.execute(db, sql, [message]).then(function(res) {
-    //     console.log("INSERT ID -> " + res.insertId);
-    // }, function (err) {
-    //     console.error(err);
-    // });
-    
-    $scope.messages.push(message);
     mySocket.emit('chatMessage', message);
+
+    message = {
+      sender: getMyInfo.get(),
+      chatContent: this.messageText
+    };
     this.messageText = '';
+    $scope.pushMessage(message);
   }
 
   mySocket.on('$destroy', function(){
     mySocket.removeListener('chatMessage');
   });
+
+  $scope.pushMessage = function(message){
+    $scope.messages.push(message);
+    $cordovaFile.writeExistingFile(cordova.file.dataDirectory, getRoomId.get()+'.txt', message.sender+'\n'+message.chatContent+'\n')
+      .then(function (success) {
+        // success
+      }, function (error) {
+        // error
+      });
+  }
 })

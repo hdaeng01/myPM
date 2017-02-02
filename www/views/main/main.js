@@ -1,7 +1,32 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, getRoomId, $ionicNavBarDelegate, $http, getMyInfo) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
+
+  $cordovaFile.createFile(cordova.file.dataDirectory, "pids", false)
+    .then(function (success) {
+      // success
+
+    }, function (error) {
+      // error
+
+    });
+
+  $cordovaFile.readAsText(cordova.file.dataDirectory, "pids")
+    .then(function (success) {
+      // success
+
+      if (success) {
+        var projects = success.split('/');
+
+        for (var i = 0; i < projects.length-2; i+=2) {
+          Chats.add(projects[i+1],projects[i]);
+        }
+      }
+    }, function (error) {
+      // error
+
+    });
 
   $scope.showModal = function(){
     if ($scope.modal) {
@@ -27,17 +52,67 @@ angular.module('App')
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
 
-    $http.get('/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.get()).success(function(pid) {
-      console.log(pid);
+    $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
       Chats.add($scope.roomName,pid);
-      getRoomId.add(pid);
-    });
+      $cordovaFile.writeExistingFile(cordova.file.dataDirectory, "pids", pid+'/'+$scope.roomName+'/')
+        .then(function (success) {
+          // success
+          $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".txt", $scope.roomName+'\n', false)
+            .then(function (success) {
+              // success
 
+            }, function (error) {
+              // error
+            });
+        }, function (error) {
+          // error
+
+        });
+    });
+    this.roomName = '';
     $scope.hideModal();
   };
 
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
+    $cordovaFile.removeFile(cordova.file.dataDirectory, chat.id+".txt")
+      .then(function (success) {
+        // success
+        $cordovaFile.readAsText(cordova.file.dataDirectory, "pids")
+          .then(function (success) {
+            // success
+            if (success) {
+              var projects = success.split('/');
+              for (var i = 0; i < projects.length-2; i+=2) {
+                if (projects[i]==chat.id) {
+                  projects.splice(i,2);
+                  break;
+                }
+              }
+              var str = projects.join('/');
+              $cordovaFile.writeFile(cordova.file.dataDirectory, "pids", str, true)
+                .then(function (success) {
+                  // success
+                }, function (error) {
+                  // error
+                });
+            }
+          }, function (error) {
+            // error
+          });
+      }, function (error) {
+        // error
+      });
+
+      $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())
+        .success(function(result) {
+
+        });
   };
+
+  $scope.goRoom = function(roomId){
+    getRoomId.add(roomId);
+    $state.go('tabs.board',{chatId:roomId});
+  }
 })

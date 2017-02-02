@@ -25,6 +25,10 @@
     {
       "path": "/createRoom",
       "proxyUrl": "http://192.168.0.4:8080/createRoom/"
+    },
+    {
+      "path": "/searchRoom",
+      "proxyUrl": "http://192.168.0.4:8080/searchRoom/"
     }
   ]
 }
