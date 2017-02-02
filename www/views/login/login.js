@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, getMyInfo) {
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, getMyInfo) {
   $scope.showModal = function(){
     if ($scope.modal) {
       $scope.modal.show();
@@ -28,7 +28,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: '/register/',
+    url: 'http://192.168.0.4:8080/auth/register/',
     data: {
         email: $scope.regiEmail,
         password: $scope.regiPass,
@@ -54,7 +54,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: '/login/',
+    url: 'http://192.168.0.4:8080/auth/login/',
     data: {
       username: $scope.username,
       password: $scope.password
