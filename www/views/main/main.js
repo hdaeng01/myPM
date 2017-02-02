@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, getRoomId, $ionicNavBarDelegate, $http, getMyInfo) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
@@ -28,11 +28,9 @@ angular.module('App')
     $scope.roomName = this.roomName;
 
     $http.get('/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.get()).success(function(pid) {
-      console.log(pid);
       Chats.add($scope.roomName,pid);
-      getRoomId.add(pid);
     });
-
+    this.roomName = '';
     $scope.hideModal();
   };
 
@@ -40,4 +38,9 @@ angular.module('App')
   $scope.remove = function(chat) {
     Chats.remove(chat);
   };
+
+  $scope.goRoom = function(roomId){
+    getRoomId.add(roomId);
+    $state.go('tabs.board',{chatId:roomId});
+  }
 })

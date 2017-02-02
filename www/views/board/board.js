@@ -1,9 +1,9 @@
 angular.module('App')
-.controller('BoardCtrl', function($scope, $stateParams, Chats, Boards, $ionicNavBarDelegate) {
+.controller('BoardCtrl', function($scope, $stateParams, Chats, Boards, $ionicNavBarDelegate, getRoomId) {
   $scope.chatRoom = Chats.get($stateParams.chatId);
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boards = Boards.all();
-
+  getRoomId.add($stateParams.chatId);
 })
 
 .controller('BoardDetailCtrl', function($scope, $stateParams, $ionicNavBarDelegate, Boards) {
