@@ -72,6 +72,10 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
       templateUrl: 'views/search/search.html',
       controller: 'SearchCtrl'
     })
+<<<<<<< HEAD
 
     $urlRouterProvider.otherwise('/login');
+=======
+  $urlRouterProvider.otherwise('/login');
+>>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
 })

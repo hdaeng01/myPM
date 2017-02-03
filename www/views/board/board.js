@@ -1,5 +1,9 @@
 angular.module('App')
+<<<<<<< HEAD
 .controller('BoardCtrl', function($scope, $stateParams, $ionicModal, $http, Chats, Boards, $ionicNavBarDelegate, getRoomId, getMyInfo) {
+=======
+.controller('BoardCtrl', function($scope, $stateParams, Chats, Boards, $ionicNavBarDelegate, getRoomId) {
+>>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
   $scope.chatRoom = Chats.get($stateParams.chatId);
   $scope.board = Boards.get($stateParams.boardId);
   $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+getRoomId.get())
@@ -12,6 +16,7 @@ angular.module('App')
 
   $scope.boards = Boards.all();
   getRoomId.add($stateParams.chatId);
+<<<<<<< HEAD
 
   $scope.edit = function(){
     if ($scope.modal) {
@@ -40,6 +45,8 @@ angular.module('App')
     })
     $scope.hideModal();
   }
+=======
+>>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
 })
 
 .controller('BoardDetailCtrl', function($scope, $stateParams, $ionicNavBarDelegate, Boards) {
