@@ -3,6 +3,19 @@ angular.module('App')
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
+  $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.txt")
+    .then(function (success) {
+      // success
+      if (success) {
+        var info = success.split('\n');
+        getMyInfo.insertName(info[1]);
+        getMyInfo.insertEmail(info[2]);
+      }
+    }, function (error) {
+      // error
+
+    });
+
   $cordovaFile.createFile(cordova.file.dataDirectory, "pids", false)
     .then(function (success) {
       // success

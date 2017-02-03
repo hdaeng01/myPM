@@ -53,123 +53,7 @@ angular.module('App.services', [])
 })
 
 .factory('Boards', function() {
-  var boards = [{
-      id: 0,
-      name:'황정우',
-      title: 'html 질문좀여',
-      time: '17.01.26 15:40',
-      hits: '3',
-      content:'가나다라마바사....',
-      comments:[{
-        name : '송주용',
-        content: '댓글 1'
-      },
-      {
-        name : '임종묵',
-        content: '댓글 2'
-      },
-      {
-        name : '양석',
-        content: '댓글 3'
-      },
-      {
-        name : '김태완',
-        content: '댓글 4'
-      }]
-    }, {
-      id: 1,
-      name:'송주용',
-      title: 'nodejs 질문좀여',
-      time: '17.01.25 13:10',
-      hits: '6',
-      content:'가나다라마바사....',
-      comments:[{
-        name : '황정우',
-        content: '댓글 1'
-      },
-      {
-        name : '임종묵',
-        content: '댓글 2'
-      },
-      {
-        name : '김태완',
-        content: '댓글 3'
-      },
-      {
-        name : '김상혁',
-        content: '댓글 4'
-      }]
-    }, {
-      id: 2,
-      name:'류성진',
-      title: 'express 질문좀여',
-      time: '17.01.24 08:22',
-      hits: '7',
-      content:'가나다라마바사....',
-      comments:[{
-        name : '황정우',
-        content: '댓글 1'
-      },
-      {
-        name : '양석',
-        content: '댓글 2'
-      },
-      {
-        name : '송주용',
-        content: '댓글 3'
-      },
-      {
-        name : '김태완',
-        content: '댓글 4'
-      }]
-    }, {
-      id: 3,
-      name:'임종묵',
-      title: 'css 질문좀여',
-      time: '17.01.22 11:12',
-      hits: '8',
-      content:'가나다라마바사....',
-      comments:[{
-        name : '황정우',
-        content: '댓글 1'
-      },
-      {
-        name : '김태완',
-        content: '댓글 2'
-      },
-      {
-        name : '성수현',
-        content: '댓글 3'
-      },
-      {
-        name : '김상혁',
-        content: '댓글 4'
-      }]
-    }, {
-      id: 4,
-      name:'양석',
-      title: 'javascript 질문좀여',
-      time: '17.01.20 19:36',
-      hits: '9',
-      content:'가나다라마바사....',
-      comments:[{
-        name : '황정우',
-        content: '댓글 1'
-      },
-      {
-        name : '송주용',
-        content: '댓글 2'
-      },
-      {
-        name : '성수현',
-        content: '댓글 3'
-      },
-      {
-        name : '김상혁',
-        content: '댓글 4'
-      }]
-    }
-  ];
+  var boards = [];
 
   return {
     all: function() {
@@ -185,6 +69,9 @@ angular.module('App.services', [])
         }
       }
       return null;
+    },
+    set: function(name, title, content){
+      boards.unshift({id:boards.length-1, name:name, title:title, content:content, time:new Date(), hits:0, comments:[]});
     }
   };
 })
@@ -208,3 +95,23 @@ angular.module('App.services', [])
     }
   }
 })
+
+.factory('checkLogin', function(){
+  var login=false;
+  return {
+    set: function(){
+      login=true;
+    },
+    get: function(){
+      return login;
+    }
+  }
+})
+
+// .factory('getBoard',function($http){
+//   return {
+//     get:function(pid){
+//       return $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+pid)
+//     }
+//   }
+// })

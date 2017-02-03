@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, getMyInfo) {
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, getMyInfo, $cordovaOauth) {
   $scope.showModal = function(){
     if ($scope.modal) {
       $scope.modal.show();
@@ -66,23 +66,56 @@ angular.module('App')
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
       } else {
-        getMyInfo.insertName(response);
-        getMyInfo.insertEmail($scope.username);
-        $state.go("main");
+        // getMyInfo.insertName(response);
+        // getMyInfo.insertEmail($scope.username);
+        $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.txt", 'local\n'+response+'\n'+$scope.username+'\n', true)
+          .then(function (success) {
+            // success
+            $state.go("main");
+          }, function (error) {
+            // error
+          });
       }
     });
   }
 
-  $scope.logFacebook = function(){
-    $http.get('http://192.168.0.4:8080/auth/facebook/').success(
-			function(data)
-			{
-        if (data == 'welcome') {
-          alert('로그인 성공');
-        } else if (data == '해당정보없음') {
-          alert('해당정보 없음.');
-        }
-			}
-    );
+  $scope.logFacebook = function() {
+    $cordovaOauth.facebook("1165650960200214", ["email", "user_relationships"])
+      .then(function(result) {
+        // results
+        $http.get("https://graph.facebook.com/v2.2/me",
+        {
+          params:
+          {
+            access_token: result.access_token,
+            fields: "id,name,gender,location,website,picture,relationship_status,email",
+            format: "json"
+          }
+        })
+        .then(function(res) {
+	                $scope.profileData = res.data;
+                  $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.txt", 'facebook\n'+$scope.profileData.name+'\n'+$scope.profileData.email+'\n', true)
+                    .then(function (success) {
+                      // success
+                      $state.go("main");
+                    }, function (error) {
+                      // error
+                    });
+	            }, function(error) {
+	                alert("There was a problem getting your profile.  Check the logs for details.");
+	                console.log(error);
+	            });
+      }, function(error) {
+        // error
+      });
+  }
+
+
+  $scope.logGoogle = function(){
+    $cordovaOauth.google("1074251742453-48vvrjk8u4jfegfkl2gsfnird3ofrvj4.apps.googleusercontent.com", ["email"]).then(function(result) {
+        console.log("Response Object -> " + JSON.stringify(result));
+    }, function(error) {
+        console.log("Error -> " + error);
+    });
   }
 })
