@@ -3,7 +3,6 @@ angular.module('App')
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
-<<<<<<< HEAD
   $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.txt")
     .then(function (success) {
       // success
@@ -17,8 +16,6 @@ angular.module('App')
 
     });
 
-=======
->>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
   $cordovaFile.createFile(cordova.file.dataDirectory, "pids", false)
     .then(function (success) {
       // success
@@ -34,11 +31,6 @@ angular.module('App')
 
       if (success) {
         var projects = success.split('/');
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
         for (var i = 0; i < projects.length-2; i+=2) {
           Chats.add(projects[i+1],projects[i]);
         }
@@ -72,16 +64,12 @@ angular.module('App')
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
 
-<<<<<<< HEAD
+
     $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
-=======
-    $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.get()).success(function(pid) {
->>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
       Chats.add($scope.roomName,pid);
       $cordovaFile.writeExistingFile(cordova.file.dataDirectory, "pids", pid+'/'+$scope.roomName+'/')
         .then(function (success) {
           // success
-<<<<<<< HEAD
           $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".txt", $scope.roomName+'\n', false)
             .then(function (success) {
               // success
@@ -89,11 +77,6 @@ angular.module('App')
             }, function (error) {
               // error
             });
-        }, function (error) {
-          // error
-
-=======
-
         }, function (error) {
           // error
 
@@ -105,7 +88,6 @@ angular.module('App')
 
         }, function (error) {
           // error
->>>>>>> eaaf1223fd55a821d9de92d8e6e0e5bb15b89acb
         });
     });
     this.roomName = '';
