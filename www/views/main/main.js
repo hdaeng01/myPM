@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
@@ -13,7 +13,6 @@ angular.module('App')
       }
     }, function (error) {
       // error
-
     });
 
   $cordovaFile.createFile(cordova.file.dataDirectory, "pids", false)
@@ -28,7 +27,6 @@ angular.module('App')
   $cordovaFile.readAsText(cordova.file.dataDirectory, "pids")
     .then(function (success) {
       // success
-
       if (success) {
         var projects = success.split('/');
         for (var i = 0; i < projects.length-2; i+=2) {
@@ -37,7 +35,6 @@ angular.module('App')
       }
     }, function (error) {
       // error
-
     });
 
   $scope.showModal = function(){
@@ -64,30 +61,32 @@ angular.module('App')
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
 
-
     $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
       Chats.add($scope.roomName,pid);
       $cordovaFile.writeExistingFile(cordova.file.dataDirectory, "pids", pid+'/'+$scope.roomName+'/')
         .then(function (success) {
           // success
+          $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
+            .then(function (success) {
+              // success
+            }, function (error) {
+              // error
+            });
           $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".txt", $scope.roomName+'\n', false)
             .then(function (success) {
               // success
-
+              $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+pid, true)
+                .then(function (success) {
+                  // success
+                }, function (error) {
+                  // error
+                });
             }, function (error) {
               // error
             });
         }, function (error) {
           // error
 
-        });
-
-      $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".txt", $scope.roomName+'\n', false)
-        .then(function (success) {
-          // success
-
-        }, function (error) {
-          // error
         });
     });
     this.roomName = '';
@@ -96,7 +95,6 @@ angular.module('App')
 
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
-    Chats.remove(chat);
     $cordovaFile.removeFile(cordova.file.dataDirectory, chat.id+".txt")
       .then(function (success) {
         // success
@@ -126,14 +124,49 @@ angular.module('App')
         // error
       });
 
+      for (var i = 0; i < Chats.getBoardLength(chat.id); i++) {
+        $cordovaFile.removeFile(cordova.file.dataDirectory, "boards/"+chat.id+"/"+i+".txt")
+          .then(function(success){
+
+          },function(error){
+
+          });
+      }
+
+    $cordovaFile.removeDir(cordova.file.dataDirectory, "boards/"+chat.id)
+      .then(function (success) {
+        // success
+        alert('로컬 디렉토리 모두 삭제');
+      }, function (error) {
+        // error
+        alert('디렉토리 삭제 실패');
+      });
+
       $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())
         .success(function(result) {
 
         });
+
+      Chats.remove(chat);
   };
 
   $scope.goRoom = function(roomId){
     getRoomId.add(roomId);
-    $state.go('tabs.board',{chatId:roomId});
+    Boards.setEmpty();
+    $http.get('http://192.168.0.4:8080/getBoardLength'+'?pid='+roomId)
+    .success(function(result) {
+      result = parseInt(result);
+      for (var i = (result-1); i >= 0; i--) {
+        $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+roomId+'/'+i+'.txt')  //여기 동기화 필요..
+          .then(function (success) {
+            // success
+            var tmp = success.split('\n');
+            Boards.set(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]);
+          }, function (error) {
+            // error
+          });
+      }
+      $state.go('tabs.board',{chatId:roomId});
+    })
   }
 })

@@ -24,7 +24,24 @@ angular.module('App.services', [])
       return null;
     },
     add: function(name,id){
-      chats.push({id:id, name:name, face:'img/'+name+'.png'});
+      chats.push({id:id, name:name, face:'img/'+name+'.png', boardLength:0});
+    },
+    setBoardLength: function(chatId){
+      for (var i = 0; i < chats.length; i++) {
+        if (chats[i].id == chatId) {
+          var tmp = parseInt(chats[i].boardLength);
+          tmp++;
+          chats[i].boardLength = tmp.toString();
+          return null;
+        }
+      }
+    },
+    getBoardLength: function(chatId){
+      for (var i = 0; i < chats.length; i++) {
+        if (chats[i].id == chatId) {
+          return chats[i].boardLength ;
+        }
+      }
     }
   };
 })
@@ -64,14 +81,33 @@ angular.module('App.services', [])
     },
     get: function(boardId) {
       for (var i = 0; i < boards.length; i++) {
-        if (boards[i].id === parseInt(boardId)) {
+        if (boards[i].id == parseInt(boardId)) {
           return boards[i];
         }
       }
       return null;
     },
-    set: function(name, title, content){
-      boards.unshift({id:boards.length-1, name:name, title:title, content:content, time:new Date(), hits:0, comments:[]});
+    getLength: function(){
+      return boards.length;
+    },
+    set: function(id, time, title, content, name, hits){
+      boards.unshift({id:id, name:name, title:title, content:content, time:time, hits:hits, comments:[]});
+      boards.sort(function (a, b) {
+      	return a.id > b.id ? -1 : a.id < b.id ? 1 : 0;
+      });
+    },
+    setEmpty: function(){
+      boards = [];
+    },
+    setHits: function(id){
+      for (var i = 0; i < boards.length; i++) {
+        if (boards[i].id == id) {
+          var tmp = parseInt(boards[i].hits);
+          tmp = (++tmp).toString();
+          boards[i].hits = tmp;
+          break;
+        }
+      }
     }
   };
 })
