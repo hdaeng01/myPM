@@ -47,7 +47,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.0.4:8080');
+  var myIoSocket = io.connect('http://192.168.1.101:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -143,11 +143,3 @@ angular.module('App.services', [])
     }
   }
 })
-
-// .factory('getBoard',function($http){
-//   return {
-//     get:function(pid){
-//       return $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+pid)
-//     }
-//   }
-// })
