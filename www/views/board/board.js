@@ -98,6 +98,7 @@ angular.module('App')
     $scope.comment = this.comment;
     $scope.comments.push({name:getMyInfo.get(), comment:$scope.comment});
     var boardId = $stateParams.boardId;
+    
     $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+boardId+'.json')
       .then(function (success) {
         var tmp = JSON.parse(success);

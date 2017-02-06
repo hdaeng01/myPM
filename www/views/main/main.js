@@ -60,7 +60,7 @@ angular.module('App')
 
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
-
+    
     $http.get('http://192.168.1.101:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
       Chats.add($scope.roomName,pid);
       $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
