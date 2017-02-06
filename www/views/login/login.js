@@ -28,7 +28,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/auth/register/',
+    url: 'http://192.168.1.101:8080/auth/register/',
     data: {
         email: $scope.regiEmail,
         password: $scope.regiPass,
@@ -54,7 +54,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/auth/login/',
+    url: 'http://192.168.1.101:8080/auth/login/',
     data: {
       username: $scope.username,
       password: $scope.password
@@ -66,9 +66,13 @@ angular.module('App')
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
       } else {
-        // getMyInfo.insertName(response);
-        // getMyInfo.insertEmail($scope.username);
-        $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.txt", 'local\n'+response+'\n'+$scope.username+'\n', true)
+        var data = {
+          route : 'local',
+          id : $scope.username,
+          username : response
+        };
+
+        $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.json", JSON.stringify(data), true)
           .then(function (success) {
             // success
             $state.go("main");
@@ -94,7 +98,12 @@ angular.module('App')
         })
         .then(function(res) {
 	                $scope.profileData = res.data;
-                  $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.txt", 'facebook\n'+$scope.profileData.name+'\n'+$scope.profileData.email+'\n', true)
+                  var data = {
+                    route : 'facebook',
+                    id : $scope.profileData.email,
+                    username : $scope.profileData.name
+                  }
+                  $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.json", JSON.stringify(data), true)
                     .then(function (success) {
                       // success
                       $state.go("main");

@@ -3,37 +3,37 @@ angular.module('App')
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
-  $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.txt")
+  $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")
     .then(function (success) {
       // success
-      if (success) {
-        var info = success.split('\n');
-        getMyInfo.insertName(info[1]);
-        getMyInfo.insertEmail(info[2]);
-      }
+      var info = JSON.parse(success);
+      getMyInfo.insertName(info.username);
+      getMyInfo.insertEmail(info.id);
+      // alert(info.username+' , '+info.id+' , '+info.route);
     }, function (error) {
       // error
     });
 
-  $cordovaFile.createFile(cordova.file.dataDirectory, "pids", false)
+  var data = {
+    pids : []
+  };
+  $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(data), false)
     .then(function (success) {
       // success
-
     }, function (error) {
       // error
-
     });
 
-  $cordovaFile.readAsText(cordova.file.dataDirectory, "pids")
+  $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
     .then(function (success) {
       // success
-      if (success) {
-        var projects = success.split('/');
-        for (var i = 0; i < projects.length-2; i+=2) {
-          Chats.add(projects[i+1],projects[i]);
+      var p = JSON.parse(success);
+
+      if (p.pids.length>0) {
+        for (var i = 0; i < p.pids.length; i++) {
+          Chats.add(p.pids[i].projectName , p.pids[i].pid);
         }
-      }
-    }, function (error) {
+      }}, function (error) {
       // error
     });
 
@@ -61,32 +61,42 @@ angular.module('App')
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
 
-    $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
+    $http.get('http://192.168.1.101:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
       Chats.add($scope.roomName,pid);
-      $cordovaFile.writeExistingFile(cordova.file.dataDirectory, "pids", pid+'/'+$scope.roomName+'/')
-        .then(function (success) {
-          // success
-          $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
+      $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
+        .then(function(success){
+          var p = JSON.parse(success);
+          p.pids.push({pid : pid , projectName : $scope.roomName});
+          $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
             .then(function (success) {
               // success
             }, function (error) {
               // error
             });
-          $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".txt", $scope.roomName+'\n', false)
+        }, function(error){
+
+        });
+      $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
+        .then(function (success) {
+          // success
+        }, function (error) {
+          // error
+        });
+      var data = {
+        projectName: $scope.roomName,
+        chatContents: []
+      }
+      $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".json", JSON.stringify(data), false)
+        .then(function (success) {
+          // success
+          $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+pid, true)
             .then(function (success) {
               // success
-              $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+pid, true)
-                .then(function (success) {
-                  // success
-                }, function (error) {
-                  // error
-                });
             }, function (error) {
               // error
             });
         }, function (error) {
           // error
-
         });
     });
     this.roomName = '';
@@ -95,73 +105,62 @@ angular.module('App')
 
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
-    $cordovaFile.removeFile(cordova.file.dataDirectory, chat.id+".txt")
-      .then(function (success) {
-        // success
-        $cordovaFile.readAsText(cordova.file.dataDirectory, "pids")
+    $cordovaFile.removeFile(cordova.file.dataDirectory, chat.id+".json")
+      .then(function(success){
+        $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
           .then(function (success) {
-            // success
-            if (success) {
-              var projects = success.split('/');
-              for (var i = 0; i < projects.length-2; i+=2) {
-                if (projects[i]==chat.id) {
-                  projects.splice(i,2);
+            var p = JSON.parse(success);
+            if (p.pids.length>0) {
+              for (var i = 0; i < p.pids.length; i++) {
+                if (p.pids[i].pid==chat.id) {
+                  p.pids.splice(i,1);
                   break;
                 }
               }
-              var str = projects.join('/');
-              $cordovaFile.writeFile(cordova.file.dataDirectory, "pids", str, true)
-                .then(function (success) {
-                  // success
-                }, function (error) {
-                  // error
-                });
             }
-          }, function (error) {
-            // error
-          });
-      }, function (error) {
-        // error
-      });
-
-      for (var i = 0; i < Chats.getBoardLength(chat.id); i++) {
-        $cordovaFile.removeFile(cordova.file.dataDirectory, "boards/"+chat.id+"/"+i+".txt")
-          .then(function(success){
-
           },function(error){
 
-          });
-      }
+          })
+      },function(error){
+
+      });
+
+    for (var i = 0; i < Chats.getBoardLength(chat.id); i++) {
+      $cordovaFile.removeFile(cordova.file.dataDirectory, "boards/"+chat.id+"/"+i+".json")
+        .then(function(success){
+
+        },function(error){
+
+        });
+    }
 
     $cordovaFile.removeDir(cordova.file.dataDirectory, "boards/"+chat.id)
       .then(function (success) {
         // success
-        alert('로컬 디렉토리 모두 삭제');
       }, function (error) {
         // error
-        alert('디렉토리 삭제 실패');
       });
 
-      $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())
-        .success(function(result) {
+    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())
+      .success(function(result) {
 
-        });
+      });
 
-      Chats.remove(chat);
+    Chats.remove(chat);
   };
 
   $scope.goRoom = function(roomId){
     getRoomId.add(roomId);
     Boards.setEmpty();
-    $http.get('http://192.168.0.4:8080/getBoardLength'+'?pid='+roomId)
+    $http.get('http://192.168.1.101:8080/getBoardLength'+'?pid='+roomId)
     .success(function(result) {
       result = parseInt(result);
       for (var i = (result-1); i >= 0; i--) {
-        $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+roomId+'/'+i+'.txt')  //여기 동기화 필요..
+        $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+roomId+'/'+i+'.json')
           .then(function (success) {
             // success
-            var tmp = success.split('\n');
-            Boards.set(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]);
+            var tmp = JSON.parse(success);
+            Boards.set(tmp.id, tmp.time, tmp.subject, tmp.content, tmp.name, tmp.hits);
           }, function (error) {
             // error
           });
