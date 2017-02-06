@@ -9,9 +9,9 @@ angular.module('App')
     .then(function (success) {
       // success
       var tmp = JSON.parse(success);
-      if (tmp.chatContents.length>2) {
-        for (var i = 1; i < tmp.chatContents.length; i++) {
-          $scope.messages.push({sender:tmp.chatContents[i].name , chatContent:tmp.chatContents[i].chatContent});
+      if (tmp.chatContents.length>0) {
+        for (var i = 0; i < tmp.chatContents.length; i++) {
+          $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
         }
       }
     }, function (error) {
@@ -24,6 +24,18 @@ angular.module('App')
     console.log($scope.messages[0].text);
     // console.log($scope.messages[0].text);
 
+    $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
+      .then(function (success) {
+        // success
+        var tmp = JSON.parse(success);
+        if (tmp.chatContents.length>0) {
+          for (var i = 0; i < tmp.chatContents.length; i++) {
+            $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
+          }
+        }
+      }, function (error) {
+        // error
+      });
     $ionicScrollDelegate.scrollBottom();
   });
 
@@ -52,13 +64,14 @@ angular.module('App')
     $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
       .then(function (success) {
         // success
+
         var tmp = JSON.parse(success);
         var data = {
           sender: getMyInfo.get(),
-          chatContent: this.messageText
+          chatContent: message.chatContent
         }
-        tmp.contents.push(data);
-        $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp))
+        tmp.chatContents.push(data);
+        $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp), true)
           .then(function (success) {
             // success
           }, function (error) {
