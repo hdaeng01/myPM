@@ -5,13 +5,13 @@ angular.module('App')
   $scope.chatRoom = Chats.get(getRoomId.get());
   mySocket.emit('joinRoom',getRoomId.get());
 
-  $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".txt")
+  $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
     .then(function (success) {
       // success
-      var contents=success.split('\n');
-      if (contents.length>2) {
-        for (var i = 1; i < contents.length-2; i+=2) {
-          $scope.messages.push({sender:contents[i],chatContent:contents[i+1]});
+      var tmp = JSON.parse(success);
+      if (tmp.chatContents.length>0) {
+        for (var i = 0; i < tmp.chatContents.length; i++) {
+          $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
         }
       }
     }, function (error) {
@@ -24,6 +24,18 @@ angular.module('App')
     console.log($scope.messages[0].text);
     // console.log($scope.messages[0].text);
 
+    $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
+      .then(function (success) {
+        // success
+        var tmp = JSON.parse(success);
+        if (tmp.chatContents.length>0) {
+          for (var i = 0; i < tmp.chatContents.length; i++) {
+            $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
+          }
+        }
+      }, function (error) {
+        // error
+      });
     $ionicScrollDelegate.scrollBottom();
   });
 
@@ -49,9 +61,22 @@ angular.module('App')
 
   $scope.pushMessage = function(message){
     $scope.messages.push(message);
-    $cordovaFile.writeExistingFile(cordova.file.dataDirectory, getRoomId.get()+'.txt', message.sender+'\n'+message.chatContent+'\n')
+    $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
       .then(function (success) {
         // success
+
+        var tmp = JSON.parse(success);
+        var data = {
+          sender: getMyInfo.get(),
+          chatContent: message.chatContent
+        }
+        tmp.chatContents.push(data);
+        $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp), true)
+          .then(function (success) {
+            // success
+          }, function (error) {
+            // error
+          });
       }, function (error) {
         // error
       });

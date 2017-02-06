@@ -32,16 +32,22 @@ angular.module('App')
     Chats.setBoardLength($stateParams.chatId);
     Boards.set(id, getMyInfo.get(), subject, content, time, 0, []);
     $scope.boards = Boards.all();
-    $http.get('http://192.168.0.4:8080/addBoard'+'?pid='+getRoomId.get()+'&title='+this.subject+'&content='+this.content+'&id='+id+'&time='+time+'&name='+getMyInfo.get())
+    $http.get('http://192.168.1.101:8080/addBoard'+'?pid='+getRoomId.get()+'&title='+this.subject+'&content='+this.content+'&id='+id+'&time='+time+'&name='+getMyInfo.get())
     .success(function(result) {
-      var str = id+'\n'+time+'\n'+subject+'\n'+content+'\n'+getMyInfo.get()+'\n 0\n';
-      alert(str);
-      $cordovaFile.writeFile(cordova.file.dataDirectory, "boards/"+getRoomId.get()+'/'+result+'.txt', str, true)
+      var data = {
+        id: id,
+        time: time,
+        subject: subject,
+        content: content,
+        name: getMyInfo.get(),
+        hits: '0',
+        comments: []
+      }
+      $cordovaFile.writeFile(cordova.file.dataDirectory, "boards/"+getRoomId.get()+'/'+result+'.json', JSON.stringify(data), true)
         .then(function (success) {
           // success
           this.subject = '';
           this.content = '';
-          alert('완료');
           $scope.hideModal();
         }, function (error) {
           // error
@@ -56,32 +62,28 @@ angular.module('App')
   },500);
 
   $scope.comments = [];
-  $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.txt')
+  $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.json')
     .then(function(result){
-      var tmp = result.split('\n');
-      var comments = tmp[6];
-      var comment = comments.split('*!%#@');
-      for (var i = 0; i < comment.length-2; i+=2) {
-        $scope.comments.push({name : comment[i] , content : comment[i+1]})
-      }
+      var tmp = JSON.parse(result);
+      tmp.comments.forEach(function(comment){
+        $scope.comments.push({name : comment.name , comment : comment.comment});
+      })
     });
 
   $ionicNavBarDelegate.showBackButton(true);
   $scope.board = Boards.get($stateParams.boardId);
-  // $scope.comments = $scope.board.comments;
 
-  $http.get('http://192.168.0.4:8080/setHits'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId)
+  $http.get('http://192.168.1.101:8080/setHits'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId)
     .success(function(result) {
-      $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.txt')
+      $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.json')
         .then(function (success) {
           // success
-          var tmp = success.split('\n');
-          var hits = parseInt(tmp[5]);
+          var tmp = JSON.parse(success);
+          var hits = parseInt(tmp.hits);
           hits = (++hits).toString();
-          tmp[5] = hits;
-          var str = tmp.join('\n');
+          tmp.hits = hits;
 
-          $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.txt', str, true)
+          $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.json', JSON.stringify(tmp), true)
             .then(function (success) {
               // success
             }, function (error) {
@@ -94,20 +96,28 @@ angular.module('App')
 
   $scope.addComment = function(){
     $scope.comment = this.comment;
-    $scope.comments.push({name:getMyInfo.get(), content:$scope.comment});
-
-    $cordovaFile.writeExistingFile(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$scope.board.id+'.txt', getMyInfo.get()+'*!%#@'+$scope.comment+'*!%#@', true)
+    $scope.comments.push({name:getMyInfo.get(), comment:$scope.comment});
+    var boardId = $stateParams.boardId;
+    $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+boardId+'.json')
       .then(function (success) {
-        // success
-      }, function (error) {
-        // error
-      });
+        var tmp = JSON.parse(success);
+        var data = {
+          name: getMyInfo.get(),
+          comment: $scope.comment
+        }
+        tmp.comments.push(data);
+        $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+boardId+'.json', JSON.stringify(tmp), true)
+          .then(function (success) {
+            // success
+          }, function (error) {
+            // error
+          });
+      })
 
-    $http.get('http://192.168.0.4:8080/setComments'+'?pid='+getRoomId.get()+'&title='+$scope.board.id+'&name='+getMyInfo.get()+'&content='+$scope.comment)
+    $http.get('http://192.168.1.101:8080/setComments'+'?pid='+getRoomId.get()+'&title='+boardId+'&name='+getMyInfo.get()+'&content='+$scope.comment)
       .success(function(result){
 
       });
-
     this.comment = ' ';
   }
 });
