@@ -24,6 +24,13 @@ angular.module('App')
       // error
     });
 
+  $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
+    .then(function (success) {
+      // success
+    }, function (error) {
+      // error
+    });
+
   $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
     .then(function (success) {
       // success
@@ -76,12 +83,7 @@ angular.module('App')
         }, function(error){
 
         });
-      $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
-        .then(function (success) {
-          // success
-        }, function (error) {
-          // error
-        });
+
       var data = {
         projectName: $scope.roomName,
         chatContents: []

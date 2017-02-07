@@ -28,11 +28,14 @@ angular.module('App')
       .then(function (success) {
         // success
         var tmp = JSON.parse(success);
-        if (tmp.chatContents.length>0) {
-          for (var i = 0; i < tmp.chatContents.length; i++) {
-            $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
-          }
-        }
+        tmp.chatContents.push(message);
+
+        $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp), true)
+          .then(function (success) {
+            // success
+          }, function (error) {
+            // error
+          });
       }, function (error) {
         // error
       });
