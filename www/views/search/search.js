@@ -6,8 +6,8 @@ angular.module('App')
       alert('기존에 존재하는 프로젝트입니다.');
     }else {
       $http.get('http://192.168.1.101:8080/searchRoom'+'?pid='+$scope.pid).success(function(project) {
-        if (project.exist) {
-          Chats.add(project.pname,$scope.pid);
+        if (project.exist) {  //res.json으로 받은 결과는 JSON.parse를 한 결과로 받는다.
+          Chats.add(project.pname, $scope.pid);
           $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
             .then(function(success){
               var p = JSON.parse(success);
@@ -16,7 +16,32 @@ angular.module('App')
                 .then(function (success) {
                   // success
 
-                  $state.go("main");
+                  // 게시판 저장.
+
+                  $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+$scope.pid, false)
+                    .then(function (success) {
+                      // success
+                      //동기화 시키기.
+                        $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+$scope.pid+'/0.json', JSON.stringify(project.board[0]), true)
+                          .then(function (success) {
+                            // success
+
+                          }, function (error) {
+                            // error
+                          });
+                          $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+$scope.pid+'/1.json', JSON.stringify(project.board[1]), true)
+                            .then(function (success) {
+                              // success
+
+                            }, function (error) {
+                              // error
+                            });
+                      // }
+                    }, function (error) {
+                      // error
+                    });
+
+                    $state.go("main");
                 }, function (error) {
                   // error
                 });

@@ -24,6 +24,13 @@ angular.module('App')
       // error
     });
 
+  $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
+    .then(function (success) {
+      // success
+    }, function (error) {
+      // error
+    });
+
   $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
     .then(function (success) {
       // success
@@ -76,12 +83,7 @@ angular.module('App')
         }, function(error){
 
         });
-      $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
-        .then(function (success) {
-          // success
-        }, function (error) {
-          // error
-        });
+
       var data = {
         projectName: $scope.roomName,
         chatContents: []
@@ -155,7 +157,7 @@ angular.module('App')
     $http.get('http://192.168.1.101:8080/getBoardLength'+'?pid='+roomId)
     .success(function(result) {
       result = parseInt(result);
-      for (var i = (result-1); i >= 0; i--) {
+      for (var i = 0; i < result; i++) {
         $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+roomId+'/'+i+'.json')
           .then(function (success) {
             // success
