@@ -6,7 +6,7 @@ angular.module('App')
       alert('기존에 존재하는 프로젝트입니다.');
     }else {
       $http.get('http://192.168.1.101:8080/searchRoom'+'?pid='+$scope.pid).success(function(project) {
-        if (project.exist) {
+        if (project.exist) {  //res.json으로 받은 결과는 JSON.parse를 한 결과로 받는다.
           Chats.add(project.pname, $scope.pid);
           $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
             .then(function(success){
@@ -17,26 +17,26 @@ angular.module('App')
                   // success
 
                   // 게시판 저장.
-                  alert(project.boardLength);
-                  alert($scope.pid);
+
                   $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+$scope.pid, false)
                     .then(function (success) {
                       // success
-                      alert("boards/"+$scope.pid+'디렉토리 생성성공');
-                      // var jj = JSON.parse(project.board);
-                      // alert(jj[0].contents);
-                      //게시판을 배열로 받아오는 과정에서 문제가 있음.
-                      alert(project.board);
-                      for (var i = 0; i < project.boardLength; i++) {
-                        alert(i);
-                        $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+$scope.pid+'/'+i+'.json', project.board[i].content, true)
+                      //동기화 시키기.
+                        $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+$scope.pid+'/0.json', JSON.stringify(project.board[0]), true)
                           .then(function (success) {
                             // success
-                            alert('boards/'+$scope.pid+'/'+i+'.json '+i+'번째 게시물 저장완료');
+
                           }, function (error) {
                             // error
                           });
-                      }
+                          $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+$scope.pid+'/1.json', JSON.stringify(project.board[1]), true)
+                            .then(function (success) {
+                              // success
+
+                            }, function (error) {
+                              // error
+                            });
+                      // }
                     }, function (error) {
                       // error
                     });
