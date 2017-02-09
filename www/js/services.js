@@ -1,7 +1,7 @@
 angular.module('App.services', [])
 
 .factory('Chats', function() {
-  var chats = [//{
+  var chats = [//{  //프로젝트들의 모임
   //   id: 0,
   //   name: 'Ben Sparrow',
   //   lastText: 'You on your way?',
@@ -23,10 +23,10 @@ angular.module('App.services', [])
       }
       return null;
     },
-    add: function(name,id){
-      chats.push({id:id, name:name, face:'img/'+name+'.png', boardLength:0});
+    add: function(name,id,length){
+      chats.push({id:id, name:name, face:'img/'+name+'.png', boardLength:length});
     },
-    setBoardLength: function(chatId){
+    setBoardLength: function(chatId){ //하나의 프로젝트에 있는 게시판의 개수를 올린다.
       for (var i = 0; i < chats.length; i++) {
         if (chats[i].id == chatId) {
           var tmp = parseInt(chats[i].boardLength);
@@ -36,7 +36,7 @@ angular.module('App.services', [])
         }
       }
     },
-    getBoardLength: function(chatId){
+    getBoardLength: function(chatId){ //게시판의 개수를 얻는다.
       for (var i = 0; i < chats.length; i++) {
         if (chats[i].id == chatId) {
           return chats[i].boardLength ;

@@ -1,4 +1,6 @@
 <ion-view view-title="{{chatRoom.name}}">
+  <ion-floating-button click="edit()" has-footer="false" button-color="#2AC9AA" icon="ion-edit" iconColor="#fff">
+  </ion-floating-button>
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="b in boards" type="item-text-wrap" href="#/tabs/board/board-detail/{{b.id}}">
@@ -8,8 +10,5 @@
         <p>조회수 : {{b.hits}}</p>
       </ion-item>
     </ion-list>
-    <button class="button button-float" ng-click="edit()">
-      <i class="icon ion-edit"></i>
-    </button>
   </ion-content>
 </ion-view>

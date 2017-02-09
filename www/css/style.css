@@ -7,18 +7,15 @@
 }
 
 .button-float{
-  background: $assertive !important;
-  color:red !important;
-  z-index: 12 !important;
-  position: absolute !important;
-  bottom: 50px !important;
-  right: 20px !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
-  -webkit-transform: translate3d(0, 0, 0) !important;
-  transform: translate3d(0, 0, 0) !important;
-  -webkit-transition: 0.2s linear !important;
-  transition: 0.2s linear !important;
-  -webkit-transition-property: -webkit-transform, all !important;
-  transition-property: transform, all !important;
+  position:fixed;
+  z-index: 999;
+	width:60px;
+	height:60px;
+	bottom:150px;
+	right:35px;
+	background-color:#0C9;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
 }

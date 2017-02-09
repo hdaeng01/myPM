@@ -77,6 +77,7 @@ angular.module('App')
         $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp), true)
           .then(function (success) {
             // success
+
           }, function (error) {
             // error
           });
