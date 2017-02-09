@@ -38,7 +38,7 @@ angular.module('App')
 
       if (p.pids.length>0) {
         for (var i = 0; i < p.pids.length; i++) {
-          Chats.add(p.pids[i].projectName , p.pids[i].pid);
+          Chats.add(p.pids[i].projectName , p.pids[i].pid , p.pids[i].boardLength);
         }
       }}, function (error) {
       // error
@@ -73,7 +73,7 @@ angular.module('App')
       $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
         .then(function(success){
           var p = JSON.parse(success);
-          p.pids.push({pid : pid , projectName : $scope.roomName});
+          p.pids.push({pid : pid , projectName : $scope.roomName , boardLength : 0});
           $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
             .then(function (success) {
               // success
@@ -106,19 +106,41 @@ angular.module('App')
   };
 
   $scope.chats = Chats.all();
+
   $scope.remove = function(chat) {
-    $cordovaFile.removeFile(cordova.file.dataDirectory, chat.id+".json")
+    var bl;
+    $cordovaFile.removeFile(cordova.file.dataDirectory, chat.id+".json")  //채팅 내용이 쓰여있는 projectId.json파일을 먼저 지운다.
       .then(function(success){
-        $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
+        $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //프로젝트 파일들이 저장되어 있는 pids.json에서 해단 프로젝트 아이디를 지운다.
           .then(function (success) {
             var p = JSON.parse(success);
             if (p.pids.length>0) {
               for (var i = 0; i < p.pids.length; i++) {
                 if (p.pids[i].pid==chat.id) {
+                  bl = p.pids[i].boardLength; //pids의 해당 프로젝트의 게시판 길이를 가져온다.
                   p.pids.splice(i,1);
                   break;
                 }
               }
+              $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true) //지운 후 그것을 다시 저장
+                .then(function (success) {
+                  // success
+                  for (var i = 0; i < bl; i++) { //프로젝트에 있던 게시판내용 삭제
+                    $cordovaFile.removeFile(cordova.file.dataDirectory, "boards/"+chat.id+"/"+i+".json")
+                      .then(function(success){
+                      },function(error){
+
+                      });
+                  }
+                  $cordovaFile.removeDir(cordova.file.dataDirectory, "boards/"+chat.id) //프로젝트 게시판 디렉토리 삭제
+                    .then(function (success) {
+                      // success
+                    }, function (error) {
+                      // error
+                    });
+                }, function (error) {
+                  // error
+                });
             }
           },function(error){
 
@@ -127,23 +149,7 @@ angular.module('App')
 
       });
 
-    for (var i = 0; i < Chats.getBoardLength(chat.id); i++) {
-      $cordovaFile.removeFile(cordova.file.dataDirectory, "boards/"+chat.id+"/"+i+".json")
-        .then(function(success){
-
-        },function(error){
-
-        });
-    }
-
-    $cordovaFile.removeDir(cordova.file.dataDirectory, "boards/"+chat.id)
-      .then(function (success) {
-        // success
-      }, function (error) {
-        // error
-      });
-
-    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())
+    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
       .success(function(result) {
 
       });
