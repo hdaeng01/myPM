@@ -28,7 +28,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.1.101:8080/auth/register/',
+    url: 'http://192.168.0.4:8080/auth/register/',
     data: {
         email: $scope.regiEmail,
         password: $scope.regiPass,
@@ -54,7 +54,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.1.101:8080/auth/login/',
+    url: 'http://192.168.0.4:8080/auth/login/',
     data: {
       username: $scope.username,
       password: $scope.password

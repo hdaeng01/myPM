@@ -1,5 +1,16 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush) {
+  $ionicPush.register().then(function(t) {
+    return $ionicPush.saveToken(t);
+  }).then(function(t) {
+    console.log('Token saved:'+ t.token);
+  });
+
+  $scope.$on('cloud:push:notification', function(event, data) {
+    var msg = data.message;
+    alert(msg.title + ': ' + msg.text);
+  });
+
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
@@ -67,8 +78,8 @@ angular.module('App')
 
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
-    
-    $http.get('http://192.168.1.101:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
+
+    $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
       Chats.add($scope.roomName,pid);
       $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
         .then(function(success){
@@ -149,7 +160,7 @@ angular.module('App')
 
       });
 
-    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
+    $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
       .success(function(result) {
 
       });
@@ -158,22 +169,25 @@ angular.module('App')
   };
 
   $scope.goRoom = function(roomId){
-    getRoomId.add(roomId);
-    Boards.setEmpty();
-    $http.get('http://192.168.1.101:8080/getBoardLength'+'?pid='+roomId)
-    .success(function(result) {
-      result = parseInt(result);
-      for (var i = 0; i < result; i++) {
-        $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+roomId+'/'+i+'.json')
-          .then(function (success) {
-            // success
-            var tmp = JSON.parse(success);
-            Boards.set(tmp.id, tmp.time, tmp.subject, tmp.content, tmp.name, tmp.hits);
-          }, function (error) {
-            // error
-          });
-      }
-      $state.go('tabs.board',{chatId:roomId});
-    })
+    // getRoomId.add(roomId);
+    // Boards.setEmpty();
+    // $http.get('http://192.168.0.4:8080/getBoardLength'+'?pid='+roomId)
+    // .success(function(result) {
+    //   result = parseInt(result);
+    //   for (var i = 0; i < result; i++) {
+    //     $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+roomId+'/'+i+'.json')
+    //       .then(function (success) {
+    //         // success
+    //         var tmp = JSON.parse(success);
+    //         Boards.set(tmp.id, tmp.time, tmp.subject, tmp.content, tmp.name, tmp.hits);
+    //       }, function (error) {
+    //         // error
+    //       });
+    //   }
+    //   $state.go('tabs.board',{chatId:roomId});
+    // })
+    $http.get('http://192.168.0.4:8080/push').success(function(pid) {
+
+    });
   }
 })

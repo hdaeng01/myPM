@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth', 'ion-floating-menu'])
+angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth', 'ion-floating-menu', 'ionic.cloud'])
 
 .run(function($ionicPlatform) {
 
@@ -21,7 +21,25 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicCloudProvider) {
+  $ionicCloudProvider.init({
+    "core": {
+      "app_id": "4c9ab9c0"
+    },
+    "push": {
+      "sender_id": "973163070527",
+      "pluginConfig": {
+        "ios": {
+          "alert": true,
+          "badge": true,
+          "sound": true
+        },
+        "android": {
+          "iconColor": "#343434"
+        }
+      }
+    }
+  })
 
   $stateProvider
     .state('tabs', {
