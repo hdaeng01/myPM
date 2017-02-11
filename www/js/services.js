@@ -47,7 +47,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.0.4:8080');
+  var myIoSocket = io.connect('http://192.168.1.101:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -140,6 +140,19 @@ angular.module('App.services', [])
     },
     get: function(){
       return login;
+    }
+  }
+})
+
+.factory('push', function(){
+  var push;
+
+  return{
+    set: function(p){
+      push = p;
+    },
+    get: function(){
+      return push;
     }
   }
 })

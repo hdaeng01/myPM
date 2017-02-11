@@ -32,7 +32,7 @@ angular.module('App')
     Chats.setBoardLength($stateParams.chatId);
     Boards.set(id, time, subject, content, getMyInfo.get(), 0, []);
     $scope.boards = Boards.all();
-    $http.get('http://192.168.0.4:8080/addBoard'+'?pid='+getRoomId.get()+'&subject='+this.subject+'&content='+this.content+'&id='+id+'&time='+time+'&name='+getMyInfo.get())
+    $http.get('http://192.168.1.101:8080/addBoard'+'?pid='+getRoomId.get()+'&subject='+this.subject+'&content='+this.content+'&id='+id+'&time='+time+'&name='+getMyInfo.get())
     .success(function(result) {
       var data = {
         id: id,
@@ -94,7 +94,7 @@ angular.module('App')
   $ionicNavBarDelegate.showBackButton(true);
   $scope.board = Boards.get($stateParams.boardId);
 
-  $http.get('http://192.168.0.4:8080/setHits'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId)
+  $http.get('http://192.168.1.101:8080/setHits'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId)
     .success(function(result) {
       $cordovaFile.readAsText(cordova.file.dataDirectory, 'boards/'+getRoomId.get()+'/'+$stateParams.boardId+'.json')
         .then(function (success) {
@@ -136,7 +136,7 @@ angular.module('App')
           });
       })
 
-    $http.get('http://192.168.0.4:8080/setComments'+'?pid='+getRoomId.get()+'&title='+boardId+'&name='+getMyInfo.get()+'&content='+$scope.comment)
+    $http.get('http://192.168.1.101:8080/setComments'+'?pid='+getRoomId.get()+'&title='+boardId+'&name='+getMyInfo.get()+'&content='+$scope.comment)
       .success(function(result){
 
       });

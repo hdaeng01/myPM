@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush, push) {
   $ionicPush.register().then(function(t) {
     return $ionicPush.saveToken(t);
   }).then(function(t) {
@@ -7,8 +7,12 @@ angular.module('App')
   });
 
   $scope.$on('cloud:push:notification', function(event, data) {
+    console.log(data);
     var msg = data.message;
-    alert(msg.title + ': ' + msg.text);
+    alert('<text> ' + msg.title + ': ' + msg.text);
+    push.set(msg);
+    var tmp = push.get();
+    alert('test!!'+tmp.title);
   });
 
   $scope.roomName='';
@@ -79,7 +83,7 @@ angular.module('App')
   $scope.createRoom = function(){
     $scope.roomName = this.roomName;
 
-    $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
+    $http.get('http://192.168.1.101:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()).success(function(pid) {
       Chats.add($scope.roomName,pid);
       $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
         .then(function(success){
@@ -160,7 +164,7 @@ angular.module('App')
 
       });
 
-    $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
+    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
       .success(function(result) {
 
       });
@@ -186,8 +190,8 @@ angular.module('App')
     //   }
     //   $state.go('tabs.board',{chatId:roomId});
     // })
-    $http.get('http://192.168.0.4:8080/push').success(function(pid) {
-
+    $http.get('http://192.168.1.101:8080/push').success(function(result) {
+      console.log(result);
     });
   }
 })
