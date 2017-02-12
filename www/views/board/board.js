@@ -32,48 +32,55 @@ angular.module('App')
     Chats.setBoardLength($stateParams.chatId);
     Boards.set(id, time, subject, content, getMyInfo.get(), 0, []);
     $scope.boards = Boards.all();
-    $http.get('http://192.168.1.101:8080/addBoard'+'?pid='+getRoomId.get()+'&subject='+this.subject+'&content='+this.content+'&id='+id+'&time='+time+'&name='+getMyInfo.get())
-    .success(function(result) {
-      var data = {
-        id: id,
-        time: time,
-        subject: subject,
-        content: content,
-        name: getMyInfo.get(),
-        hits: '0',
-        comments: []
-      }
-      $cordovaFile.writeFile(cordova.file.dataDirectory, "boards/"+getRoomId.get()+'/'+result+'.json', JSON.stringify(data), true)
-        .then(function (success) {
-          // success
-          this.subject = '';
-          this.content = '';
-          $scope.hideModal();
-        }, function (error) {
-          // error
-        });
 
-      $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //pids에서 해당 프로젝트를 불러온 후 board의 길이를 하나 올려서 저장
-        .then(function(success){
-          var p = JSON.parse(success);
-          for (var i = 0; i < p.pids.length; i++) {
-            if(p.pids[i].pid == getRoomId.get()){
-              var tmp = parseInt(p.pids[i].boardLength);
-              tmp++;
-              p.pids[i].boardLength = tmp.toString();
-            }
+    $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")
+      .then(function (success) {
+        // success
+        var tmp = JSON.parse(success);
+        var token = tmp.token;
+        $http.get('http://192.168.1.101:8080/addBoard'+'?pid='+getRoomId.get()+'&subject='+this.subject+'&content='+this.content+'&id='+id+'&time='+time+'&name='+getMyInfo.get()+'&token='+token)
+        .success(function(result) {
+          var data = {
+            id: id,
+            time: time,
+            subject: subject,
+            content: content,
+            name: getMyInfo.get(),
+            hits: '0',
+            comments: []
           }
-          $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
+          $cordovaFile.writeFile(cordova.file.dataDirectory, "boards/"+getRoomId.get()+'/'+result+'.json', JSON.stringify(data), true)
             .then(function (success) {
               // success
+              this.subject = '';
+              this.content = '';
+              $scope.hideModal();
             }, function (error) {
               // error
             });
-        }, function(error){
 
-        });
+          $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //pids에서 해당 프로젝트를 불러온 후 board의 길이를 하나 올려서 저장
+            .then(function(success){
+              var p = JSON.parse(success);
+              for (var i = 0; i < p.pids.length; i++) {
+                if(p.pids[i].pid == getRoomId.get()){
+                  var tmp = parseInt(p.pids[i].boardLength);
+                  tmp++;
+                  p.pids[i].boardLength = tmp.toString();
+                }
+              }
+              $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
+                .then(function (success) {
+                  // success
+                }, function (error) {
+                  // error
+                });
+            }, function(error){
 
-    })
+            });
+
+        })
+      });
   }
 })
 
