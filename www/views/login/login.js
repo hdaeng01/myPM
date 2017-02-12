@@ -1,20 +1,11 @@
 angular.module('App')
 .controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, getMyInfo, $cordovaOauth, $ionicPush, push) {
-  // var token;
-  // $ionicPush.register().then(function(t) {
-  //   return $ionicPush.saveToken(t);
-  // }).then(function(t) {
-  //   token = t.token;
-  //   console.log('Token saved:'+ t.token);
-  // });
-
-  $scope.$on('cloud:push:notification', function(event, data) {
-    console.log(data);
-    var msg = data.message;
-    alert('<text> ' + msg.title + ': ' + msg.text);
-    push.set(msg);
-    var tmp = push.get();
-    alert('test!!'+tmp.title);
+  var token;
+  $ionicPush.register().then(function(t) {
+    return $ionicPush.saveToken(t);
+  }).then(function(t) {
+    token = t.token;
+    console.log('Token saved:'+ t.token);
   });
 
   $scope.showModal = function(){
@@ -86,8 +77,8 @@ angular.module('App')
         var data = {
           route : 'local',
           id : $scope.username,
-          username : response
-          // token : token
+          username : response,
+          token : token
         };
 
         $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.json", JSON.stringify(data), true)

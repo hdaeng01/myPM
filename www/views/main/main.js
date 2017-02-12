@@ -1,18 +1,9 @@
 angular.module('App')
 .controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush, push) {
-  $ionicPush.register().then(function(t) {
-    return $ionicPush.saveToken(t);
-  }).then(function(t) {
-    console.log('Token saved:'+ t.token);
-  });
-
   $scope.$on('cloud:push:notification', function(event, data) {
-    
     var msg = data.message;
-    alert('<text> ' + msg.title + ': ' + msg.text);
-    // push.set(msg);
-    // var tmp = push.get();
-    // alert('test!!'+tmp.title);
+    push.set(msg);
+    var tmp = push.get();
   });
 
   $scope.roomName='';
