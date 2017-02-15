@@ -12,6 +12,7 @@ angular.module('App')
       if (tmp.chatContents.length>0) {
         for (var i = 0; i < tmp.chatContents.length; i++) {
           $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
+          console.log(tmp.chatContents[i].chatContent);
         }
       }
     }, function (error) {
@@ -67,7 +68,6 @@ angular.module('App')
     $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
       .then(function (success) {
         // success
-
         var tmp = JSON.parse(success);
         var data = {
           sender: getMyInfo.get(),
@@ -77,7 +77,7 @@ angular.module('App')
         $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp), true)
           .then(function (success) {
             // success
-
+            console.log(message.chatContent+'쓰기 성공');
           }, function (error) {
             // error
           });

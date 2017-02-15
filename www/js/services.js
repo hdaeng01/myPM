@@ -47,7 +47,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.1.101:8080');
+  var myIoSocket = io.connect('http://192.168.0.4:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -90,14 +90,12 @@ angular.module('App.services', [])
     getLength: function(){
       return boards.length;
     },
-    set: function(id, time, title, content, name, hits){
-      boards.unshift({id:id, name:name, title:title, content:content, time:time, hits:hits, comments:[]});
-      boards.sort(function (a, b) {
-      	return a.id > b.id ? -1 : a.id < b.id ? 1 : 0;
-      });
+    set: function(id, time, title, content, name, hits, comments){
+      boards.unshift({id:id, name:name, title:title, content:content, time:time, hits:hits, comments:comments});
     },
     setEmpty: function(){
       boards = [];
+      console.log('게시판 지움');
     },
     setHits: function(id){
       for (var i = 0; i < boards.length; i++) {
