@@ -7,12 +7,11 @@ angular.module('App')
       var pid = str[0].substring(str[0].length-9,str[0].length-1);
       getRoomId.add(pid);
       Boards.setEmpty();
-      $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+pid)
+      $http.get('http://192.168.1.101:8080/getBoard'+'?pid='+pid)
         .success(function(result) {
             var board = result.board;
             for (var i = 0; i < parseInt(result.boardLength); i++) {
               Boards.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits);
-              console.log('tabs');
             }
             $state.go('tabs.board',{chatId:pid});
         });

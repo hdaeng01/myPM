@@ -10,5 +10,6 @@
         <p>조회수 : {{b.hits}}</p>
       </ion-item>
     </ion-list>
+    <ion-infinite-scroll on-infinite="getPage()" ng-if="total>page" immediate-check="false"></ion-infinite-scroll>
   </ion-content>
 </ion-view>

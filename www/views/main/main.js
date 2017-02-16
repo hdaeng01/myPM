@@ -73,7 +73,7 @@ angular.module('App')
         // success
         var tmp = JSON.parse(success);
         var token = tmp.token;
-        $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()+'&token='+token).success(function(pid) {
+        $http.get('http://192.168.1.101:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()+'&token='+token).success(function(pid) {
           Chats.add($scope.roomName,pid);
           $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
             .then(function(success){
@@ -163,7 +163,7 @@ angular.module('App')
 
       });
 
-    $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
+    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
       .success(function(result) {
 
       });
@@ -175,7 +175,7 @@ angular.module('App')
     getRoomId.add(roomId);
     Boards.setEmpty();
 
-    $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+roomId)
+    $http.get('http://192.168.1.101:8080/getBoard'+'?pid='+roomId)
       .success(function(result) {
           var board = result.board;
           for (var i = 0; i < parseInt(result.boardLength); i++) {
