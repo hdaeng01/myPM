@@ -11,7 +11,7 @@ angular.module('App')
           var tmp = JSON.parse(success);
           var token = tmp.token;
 
-          $http.get('http://192.168.1.101:8080/searchRoom'+'?pid='+$scope.pid+'&token='+token).success(function(project) {
+          $http.get('http://192.168.1.100:8080/searchRoom'+'?pid='+$scope.pid+'&token='+token).success(function(project) {
             if (project.exist) {  //res.json으로 받은 결과는 JSON.parse를 한 결과로 받는다.
               Chats.add(project.pname, $scope.pid);
 
@@ -34,30 +34,6 @@ angular.module('App')
                   $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
                     .then(function (success) {
                       // success
-
-                      // 게시판 저장.
-                      // $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+$scope.pid, true)
-                      //   .then(function (success) {
-                      //     // success
-                      //     var length = {
-                      //       length: project.boardLength
-                      //     };
-                      //     $cordovaFile.writeFile(cordova.file.dataDirectory, "boards/"+$scope.pid+"/length.json", JSON.stringify(length), true)
-                      //       .then(function (success) {
-                      //
-                      //       })
-                      //     for (var i = 0; i < project.boardLength; i++) {
-                      //       $cordovaFile.writeFile(cordova.file.dataDirectory, 'boards/'+$scope.pid+'/'+i+'.json', JSON.stringify(project.board[i]), true)
-                      //         .then(function (success) {
-                      //           // success
-                      //         }, function (error) {
-                      //           // error
-                      //         });
-                      //     }
-                      //   }, function (error) {
-                      //     // error
-                      //   });
-
                         $state.go("main");
                     }, function (error) {
                       // error

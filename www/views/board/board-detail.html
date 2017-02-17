@@ -1,7 +1,7 @@
 <ion-view view-title="{{chatRoom.name}}">
   <ion-content>
     <ion-list>
-      <div class="item item-divider">글정보</div>
+      <div class="item item-divider">글정보 <button class="button button-small button-positive button-assertive" style='float:right' ng-click="deleteDetail()">삭제</button></div>
       <ion-item class="item-remove-animate item-avatar item-icon-right" type="item-text-wrap">
         <h2>{{board.title}}</h2>
         <h3>{{board.name}}</h3>

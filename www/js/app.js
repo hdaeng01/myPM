@@ -49,7 +49,6 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
       controller: 'TabCtrl'
     })
     .state('tabs.board', {
-      cache: false,
       url: '/board/:chatId',
       views: {
         'tab-board': {
@@ -59,7 +58,6 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
       }
     })
     .state('tabs.board-detail', {
-      cache: false,
       url: '/board/board-detail/:boardId',
       views: {
         'tab-board': {

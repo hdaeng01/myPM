@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush, push) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush, push, $ionicHistory) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
@@ -9,7 +9,6 @@ angular.module('App')
       var info = JSON.parse(success);
       getMyInfo.insertName(info.username);
       getMyInfo.insertEmail(info.id);
-      // alert(info.username+' , '+info.id+' , '+info.route);
     }, function (error) {
       // error
     });
@@ -23,14 +22,6 @@ angular.module('App')
     }, function (error) {
       // error
     });
-
-  // $cordovaFile.createDir(cordova.file.dataDirectory, "boards", false)
-  //   .then(function (success) {
-  //     // success
-  //   }, function (error) {
-  //     // error
-  //   });
-
   $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
     .then(function (success) {
       // success
@@ -73,7 +64,7 @@ angular.module('App')
         // success
         var tmp = JSON.parse(success);
         var token = tmp.token;
-        $http.get('http://192.168.1.101:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()+'&token='+token).success(function(pid) {
+        $http.get('http://192.168.1.100:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()+'&token='+token).success(function(pid) {
           Chats.add($scope.roomName,pid);
           $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
             .then(function(success){
@@ -96,19 +87,7 @@ angular.module('App')
           $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".json", JSON.stringify(data), false)
             .then(function (success) {
               // success
-              // $cordovaFile.createDir(cordova.file.dataDirectory, "boards/"+pid, true)
-              //   .then(function (success) {
-              //     // success
-              //     var data = {
-              //       length: 0
-              //     }
-              //     $cordovaFile.writeFile(cordova.file.dataDirectory, "boards/"+pid+"/length.json", JSON.stringify(data), true)
-              //       .then(function (success) {
-              //
-              //       })
-              //   }, function (error) {
-              //     // error
-              //   });
+
             }, function (error) {
               // error
             });
@@ -139,19 +118,7 @@ angular.module('App')
               $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true) //지운 후 그것을 다시 저장
                 .then(function (success) {
                   // success
-                  // for (var i = 0; i < bl; i++) { //프로젝트에 있던 게시판내용 삭제
-                  //   $cordovaFile.removeFile(cordova.file.dataDirectory, "boards/"+chat.id+"/"+i+".json")
-                  //     .then(function(success){
-                  //     },function(error){
-                  //
-                  //     });
-                  // }
-                  // $cordovaFile.removeDir(cordova.file.dataDirectory, "boards/"+chat.id) //프로젝트 게시판 디렉토리 삭제
-                  //   .then(function (success) {
-                  //     // success
-                  //   }, function (error) {
-                  //     // error
-                  //   });
+
                 }, function (error) {
                   // error
                 });
@@ -163,7 +130,7 @@ angular.module('App')
 
       });
 
-    $http.get('http://192.168.1.101:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
+    $http.get('http://192.168.1.100:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
       .success(function(result) {
 
       });
@@ -174,8 +141,9 @@ angular.module('App')
   $scope.goRoom = function(roomId){
     getRoomId.add(roomId);
     Boards.setEmpty();
-
-    $http.get('http://192.168.1.101:8080/getBoard'+'?pid='+roomId)
+    $ionicHistory.clearHistory();
+    $ionicHistory.clearCache();
+    $http.get('http://192.168.1.100:8080/getBoard'+'?pid='+roomId)
       .success(function(result) {
           var board = result.board;
           for (var i = 0; i < parseInt(result.boardLength); i++) {
