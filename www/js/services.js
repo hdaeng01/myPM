@@ -100,7 +100,7 @@ angular.module('App.services', [])
       boards = [];
       console.log('게시판 지움');
     },
-    remove: function(boardId) {
+    removeBoard: function(boardId) {
       for (var i = 0; i < boards.length; i++) {
         if (boards[i].id == parseInt(boardId)) {
           boards.splice(boards.indexOf(boards[i]), 1);
@@ -115,6 +115,15 @@ angular.module('App.services', [])
           tmp = (++tmp).toString();
           boards[i].hits = tmp;
           break;
+        }
+      }
+    },
+    change: function(id){
+      for (var i = boards.length-1; i > -1; i--) {
+        if (boards[i].id==id) {
+            var tmp = parseInt(boards[i].id)-1;
+            boards[i].id = tmp;
+            id++;
         }
       }
     }

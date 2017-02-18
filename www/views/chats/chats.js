@@ -12,7 +12,6 @@ angular.module('App')
       if (tmp.chatContents.length>0) {
         for (var i = 0; i < tmp.chatContents.length; i++) {
           $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
-          console.log(tmp.chatContents[i].chatContent);
         }
       }
     }, function (error) {
@@ -21,8 +20,6 @@ angular.module('App')
 
   mySocket.on('chatMessage', function(message){
     $scope.messages.push(message);
-    console.log(message);
-    console.log($scope.messages[0].text);
     // console.log($scope.messages[0].text);
 
     $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")

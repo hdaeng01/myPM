@@ -13,7 +13,6 @@ angular.module('App')
         Boards.set(result.board[i].id, result.board[i].time, result.board[i].subject, result.board[i].content, result.board[i].name, result.board[i].hits, result.board[i].comments);
       };
       $scope.total = result.totalPages;
-      console.log($scope.page+',,,,,,'+$scope.total);
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }).error(function(err){
       $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -87,7 +86,9 @@ angular.module('App')
         $http.get('http://192.168.1.100:8080/deleteDetail'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId+'&token='+token)
           .success(function(result) {
             if (result=='complete') {
-              Boards.remove($stateParams.boardId);
+              Boards.removeBoard($stateParams.boardId);
+              var start = parseInt($stateParams.boardId)+1;
+              Boards.change(start);
               $ionicHistory.goBack();
             }
         })
