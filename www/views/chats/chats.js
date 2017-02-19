@@ -18,27 +18,30 @@ angular.module('App')
       // error
     });
 
-  mySocket.on('chatMessage', function(message){
-    $scope.messages.push(message);
-    // console.log($scope.messages[0].text);
+  document.addEventListener('deviceready', function () {
+    // cordova.plugins.backgroundMode is now available
 
-    $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
-      .then(function (success) {
-        // success
-        var tmp = JSON.parse(success);
-        tmp.chatContents.push(message);
+    mySocket.on('chatMessage', function(message){
+      $scope.messages.push(message);
+      // console.log($scope.messages[0].text);
+      $cordovaFile.readAsText(cordova.file.dataDirectory, message.roomId+".json")
+        .then(function (success) {
+          // success
+          var tmp = JSON.parse(success);
+          tmp.chatContents.push(message);
+          $cordovaFile.writeFile(cordova.file.dataDirectory, message.roomId+'.json', JSON.stringify(tmp), true)
+            .then(function (success) {
+              // success
+            }, function (error) {
+              // error
+            });
+        }, function (error) {
+          // error
+        });
+      $ionicScrollDelegate.scrollBottom();
+    });
 
-        $cordovaFile.writeFile(cordova.file.dataDirectory, getRoomId.get()+'.json', JSON.stringify(tmp), true)
-          .then(function (success) {
-            // success
-          }, function (error) {
-            // error
-          });
-      }, function (error) {
-        // error
-      });
-    $ionicScrollDelegate.scrollBottom();
-  });
+  }, false);
 
   $scope.sendMessage = function(){
     var message = {

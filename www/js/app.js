@@ -14,6 +14,7 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
+      cordova.plugins.backgroundMode.enable();
     }
     if (window.StatusBar) {
       StatusBar.styleDefault();
@@ -49,6 +50,7 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
       controller: 'TabCtrl'
     })
     .state('tabs.board', {
+      cache: false,
       url: '/board/:chatId',
       views: {
         'tab-board': {
@@ -67,7 +69,6 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
       }
     })
     .state('tabs.chats', {
-      cache: false,
       url: '/chats/:chatId',
       views: {
         'tab-chats': {
