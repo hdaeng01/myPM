@@ -11,7 +11,7 @@ angular.module('App')
           var tmp = JSON.parse(success);
           var token = tmp.token;
 
-          $http.get('http://192.168.1.101:8080/searchRoom'+'?pid='+$scope.pid+'&token='+token).success(function(project) {
+          $http.get('http://192.168.0.4:8080/searchRoom'+'?pid='+$scope.pid+'&token='+token).success(function(project) {
             if (project.exist) {  //res.json으로 받은 결과는 JSON.parse를 한 결과로 받는다.
               Chats.add(project.pname, $scope.pid);
 

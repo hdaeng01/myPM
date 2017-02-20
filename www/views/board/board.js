@@ -7,7 +7,7 @@ angular.module('App')
 
   $scope.getPage = function(){
     $scope.page++;
-    $http.get('http://192.168.1.101:8080/getPage'+'?pid='+getRoomId.get()+'&page='+$scope.page)
+    $http.get('http://192.168.0.4:8080/getPage'+'?pid='+getRoomId.get()+'&page='+$scope.page)
     .success(function(result) {
       for(var i = 0; i<result.board.length; i++){
         Boards.set(result.board[i].id, result.board[i].time, result.board[i].subject, result.board[i].content, result.board[i].name, result.board[i].hits, result.board[i].comments);
@@ -52,7 +52,7 @@ angular.module('App')
         // success
         var tmp = JSON.parse(success);
         var token = tmp.token;
-        $http.get('http://192.168.1.101:8080/addBoard'+'?pid='+getRoomId.get()+'&subject='+subject+'&content='+content+'&time='+time+'&name='+getMyInfo.get()+'&token='+token)
+        $http.get('http://192.168.0.4:8080/addBoard'+'?pid='+getRoomId.get()+'&subject='+subject+'&content='+content+'&time='+time+'&name='+getMyInfo.get()+'&token='+token)
         .success(function(result) {
           Boards.unshift(result, time, subject, content, getMyInfo.get(), 0, []);
           $scope.boards = Boards.all();
@@ -72,7 +72,7 @@ angular.module('App')
   $scope.board = Boards.get($stateParams.boardId);
   $scope.comments = $scope.board.comments;
 
-  $http.get('http://192.168.1.101:8080/setHits'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId)
+  $http.get('http://192.168.0.4:8080/setHits'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId)
     .success(function(result) {
 
     })
@@ -83,7 +83,7 @@ angular.module('App')
         // success
         var tmp = JSON.parse(success);
         var token = tmp.token;
-        $http.get('http://192.168.1.101:8080/deleteDetail'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId+'&token='+token)
+        $http.get('http://192.168.0.4:8080/deleteDetail'+'?pid='+getRoomId.get()+'&title='+$stateParams.boardId+'&token='+token)
           .success(function(result) {
             if (result=='complete') {
               Boards.removeBoard($stateParams.boardId);
@@ -100,7 +100,7 @@ angular.module('App')
     $scope.comments.push({name:getMyInfo.get(), comment:$scope.comment});
     var boardId = $stateParams.boardId;
 
-    $http.get('http://192.168.1.101:8080/setComments'+'?pid='+getRoomId.get()+'&title='+boardId+'&name='+getMyInfo.get()+'&content='+$scope.comment)
+    $http.get('http://192.168.0.4:8080/setComments'+'?pid='+getRoomId.get()+'&title='+boardId+'&name='+getMyInfo.get()+'&content='+$scope.comment)
       .success(function(result){
 
       });
