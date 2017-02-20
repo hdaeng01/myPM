@@ -7,7 +7,19 @@
   <ion-content class="padding">
     <ion-scroll>
       <div class="chatContent">
-        <p  ng-repeat="m in messages">{{m.sender}} : {{m.chatContent}}</p>
+        <div  class="messages" ng-repeat="m in messages" ng-class="{other: m.uid != myId}">
+          <div>{{m.sender}}</div>
+          <div class="messagee" ng-class="{'slide-right': hideTime, '': !hideTime}">
+            <span style= "background: #007AFF !important;
+                          display: inline-block !important;
+                          color: white !important;
+                          padding: 10px !important;
+                          border-radius: 10px !important;
+                          text-align: left !important;
+                          max-width: 240px !important;"> {{m.chatContent}}
+            </span>
+          </div>
+        </div>
       </div>
     </ion-scroll>
 

@@ -1,5 +1,6 @@
 angular.module('App')
 .controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $cordovaFile, Chats, mySocket, getMyInfo, getRoomId) {
+  $scope.myId = getMyInfo.getEmail();
   $scope.messages = [];
   getRoomId.add($stateParams.chatId);
   $scope.chatRoom = Chats.get(getRoomId.get());
@@ -13,6 +14,7 @@ angular.module('App')
         for (var i = 0; i < tmp.chatContents.length; i++) {
           $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
         }
+        $ionicScrollDelegate.scrollBottom();
       }
     }, function (error) {
       // error
@@ -65,6 +67,7 @@ angular.module('App')
 
   $scope.pushMessage = function(message){
     $scope.messages.push(message);
+    $ionicScrollDelegate.scrollBottom();
     $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
       .then(function (success) {
         // success
