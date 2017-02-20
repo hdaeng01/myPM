@@ -5,6 +5,7 @@ angular.module('App')
   getRoomId.add($stateParams.chatId);
   $scope.chatRoom = Chats.get(getRoomId.get());
   mySocket.emit('joinRoom',getRoomId.get());
+  $scope.hideTime = true;
 
   $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
     .then(function (success) {
@@ -12,7 +13,7 @@ angular.module('App')
       var tmp = JSON.parse(success);
       if (tmp.chatContents.length>0) {
         for (var i = 0; i < tmp.chatContents.length; i++) {
-          $scope.messages.push({sender:tmp.chatContents[i].sender , chatContent:tmp.chatContents[i].chatContent});
+          $scope.messages.push({sender:tmp.chatContents[i].sender ,chatContent:tmp.chatContents[i].chatContent, uid:tmp.chatContents[i].uid});
         }
         $ionicScrollDelegate.scrollBottom();
       }
@@ -49,12 +50,14 @@ angular.module('App')
     var message = {
       roomId: getRoomId.get(),
       sender: getMyInfo.get(),
+      uid: getMyInfo.getEmail(),
       chatContent: this.messageText
     };
     mySocket.emit('chatMessage', message);
 
     message = {
       sender: getMyInfo.get(),
+      uid: getMyInfo.getEmail(),
       chatContent: this.messageText
     };
     this.messageText = '';
@@ -74,6 +77,7 @@ angular.module('App')
         var tmp = JSON.parse(success);
         var data = {
           sender: getMyInfo.get(),
+          uid: getMyInfo.getEmail(),
           chatContent: message.chatContent
         }
         tmp.chatContents.push(data);

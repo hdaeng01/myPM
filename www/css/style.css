@@ -1,5 +1,5 @@
 .chatContent {
-  height: 350px;
+  height: 530px;
 }
 
 #projectNum {
@@ -52,20 +52,30 @@
   }
 }
 //This will change
-.messages.other {
-  .messagee {
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    -moz-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
-    text-align: right !important;
-  }
-  .messagee.slide-right {
-    -webkit-transform: translate3d(120px, 0, 0) !important;
-    -moz-transform: translate3d(120px, 0, 0) !important;
-    transform: translate3d(120px, 0, 0) !important;
-  }
-  span {
-    color: black !important;
-    background-color: #C7C7CC !important;
-  }
+.messages.other .messagee{
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  -moz-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+  text-align: right !important;
+}
+
+.messages.other .messagee.slide-right {
+    -webkit-transform: translate3d(110px, 0, 0) !important;
+    -moz-transform: translate3d(110px, 0, 0) !important;
+    transform: translate3d(110px, 0, 0) !important;
+}
+
+.messages.other .messagee span{
+  color: black !important;
+  background-color: #C7C7CC !important;
+}
+
+.messagee span {
+  background: #007AFF !important;
+  display: inline-block !important;
+  color: white !important;
+  padding: 10px !important;
+  text-align: left !important;
+  border-radius: 10px !important;
+  max-width: 240px !important;
 }

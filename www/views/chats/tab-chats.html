@@ -4,32 +4,24 @@
       <span class="icon ion-arrow-left-a"></span>
     </button>
   </ion-nav-back-buttons>
-  <ion-content class="padding">
+  <ion-content class="padding content-stable" on-swipe-left="hideTime = false" on-swipe-right="hideTime = true">
     <ion-scroll>
       <div class="chatContent">
-        <div  class="messages" ng-repeat="m in messages" ng-class="{other: m.uid != myId}">
-          <div>{{m.sender}}</div>
-          <div class="messagee" ng-class="{'slide-right': hideTime, '': !hideTime}">
-            <span style= "background: #007AFF !important;
-                          display: inline-block !important;
-                          color: white !important;
-                          padding: 10px !important;
-                          border-radius: 10px !important;
-                          text-align: left !important;
-                          max-width: 240px !important;"> {{m.chatContent}}
-            </span>
+        <div ng-repeat="m in messages" ng-class="{'other': m.uid == myId}"  class="messages">
+          <div class="messagee" ng-class="{'slide-right': hideTime}">
+            <div ng-if="m.uid!=myId">{{m.sender}}</div>
+            <span> {{m.chatContent}} </span>
           </div>
         </div>
       </div>
     </ion-scroll>
-
-    <div class="list">
-      <div class="item item-input-inset">
-        <label class="item-input-wrapper">
-          <input type="text" ng-model="messageText"/>
-        </label>
-        <button class="button button-small button-positive" ng-click="sendMessage()">전송 </button>
-      </div>
-    </div>
   </ion-content>
+  <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+    <label class="item-input-wrapper">
+      <input type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="messageText"/>
+    </label>
+    <button class="button button-clear" ng-click="sendMessage()">
+      전송
+    </button>
+  </ion-footer-bar>
 </ion-view>
