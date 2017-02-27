@@ -174,3 +174,20 @@ angular.module('App.services', [])
     }
   }
 })
+
+.directive('focusMe',['$timeout',function ($timeout) {
+  return {
+    link: function (scope, element, attrs) {
+      if (attrs.focusMeDisable === "true") {
+        return;
+      }
+      $timeout(function () {
+        element.on('blur', function() {
+          if (attrs.focusMeDisable === "false") {
+              element[0].focus();
+          }
+        });
+      }, 350);
+    }
+  };
+}]);

@@ -15,6 +15,7 @@ angular.module('App')
         for (var i = 0; i < tmp.chatContents.length; i++) {
           $scope.messages.push({sender:tmp.chatContents[i].sender ,chatContent:tmp.chatContents[i].chatContent, uid:tmp.chatContents[i].uid});
         }
+        $ionicScrollDelegate.resize();
         $ionicScrollDelegate.scrollBottom();  //$ionicScrollDelegate이 ion-content안에 ion-scroll의 scroll을 메소드대로 통제한다.
       }
     }, function (error) {
@@ -41,12 +42,14 @@ angular.module('App')
         }, function (error) {
           // error
         });
+      $ionicScrollDelegate.resize();
       $ionicScrollDelegate.scrollBottom();
     });
 
   }, false);
 
   $scope.sendMessage = function(){
+    $scope.disableFlag = "false";
     var message = {
       roomId: getRoomId.get(),
       sender: getMyInfo.get(),
@@ -70,6 +73,7 @@ angular.module('App')
 
   $scope.pushMessage = function(message){
     $scope.messages.push(message);
+    $ionicScrollDelegate.resize();
     $ionicScrollDelegate.scrollBottom();
     $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
       .then(function (success) {
@@ -91,5 +95,16 @@ angular.module('App')
       }, function (error) {
         // error
       });
+  }
+
+  $scope.focused = function() {
+    $ionicScrollDelegate.resize();
+    $ionicScrollDelegate.scrollBottom();
+  }
+
+  $scope.blurred = function() {
+    $scope.disableFlag = "true";
+    $ionicScrollDelegate.resize();
+    $ionicScrollDelegate.scrollBottom();
   }
 })

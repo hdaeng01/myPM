@@ -18,7 +18,7 @@
   </ion-content>
   <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
     <label class="item-input-wrapper">
-      <input type="text" placeholder="Type your message" on-return="sendMessage()" ng-model="messageText"/>
+      <input type="text" placeholder="Type your message" ng-model="messageText" ng-focus="focused()" ng-blur="blurred()"  focus-me-disable={{disableFlag}} focus-me/>
     </label>
     <button class="button button-clear" ng-click="sendMessage()">
       전송
