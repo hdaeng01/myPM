@@ -3,7 +3,7 @@ angular.module('App')
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
-  $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")
+  $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")  // 파일에서 아이디와 이름정보를 꺼낸 후 getMyInfo 커스텀 서비스에 저장. 모든 뷰에서 꺼내 사용할 수 있게.
     .then(function (success) {
       // success
       var info = JSON.parse(success);
@@ -16,13 +16,13 @@ angular.module('App')
   var data = {
     pids : []
   };
-  $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(data), false)
+  $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(data), false)  //내가 속해있는 프로젝트들의 아이디를 저장하는 파일 생성.
     .then(function (success) {
       // success
     }, function (error) {
       // error
     });
-  $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
+  $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //내가 속해있는 프로젝트들을 읽어온다.
     .then(function (success) {
       // success
       var p = JSON.parse(success);
@@ -64,33 +64,44 @@ angular.module('App')
         // success
         var tmp = JSON.parse(success);
         var token = tmp.token;
-        $http.get('http://192.168.0.4:8080/createRoom'+'?pname='+$scope.roomName+'&captain_id='+getMyInfo.getEmail()+'&token='+token).success(function(pid) {
+
+        $http({
+        method: 'POST' ,
+        url: 'http://192.168.1.101:8080/createRoom',
+        data: {
+          pname: $scope.roomName,
+          captain_id: getMyInfo.getEmail(),
+          token: token
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+        }).success(function(pid) {
           Chats.add($scope.roomName,pid);
-          $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")
-            .then(function(success){
-              var p = JSON.parse(success);
-              p.pids.push({pid : pid , projectName : $scope.roomName , boardLength : 0});
-              $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
-                .then(function (success) {
-                  // success
-                }, function (error) {
-                  // error
-                });
+          $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //pids파일에서 기존의 프로젝트들을 불러온 후 집어 넣어준다.
+          .then(function(success){
+            var p = JSON.parse(success);
+            p.pids.push({pid : pid , projectName : $scope.roomName , boardLength : 0});
+            $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
+              .then(function (success) {
+                // success
+              }, function (error) {
+                // error
+              });
             }, function(error){
 
             });
-
-          var data = {
-            projectName: $scope.roomName,
-            chatContents: []
-          }
-          $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".json", JSON.stringify(data), false)
-            .then(function (success) {
-              // success
-              console.log(pid+'.json 파일 생성 성공');
-            }, function (error) {
-              // error
-            });
+            var data = {
+              projectName: $scope.roomName,
+              chatContents: []
+            }
+            $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".json", JSON.stringify(data), false)  //해당 프로젝트 파일도 생성. 이곳에 채팅 내용을 저장.
+              .then(function (success) {
+                // success
+                console.log(pid+'.json 파일 생성 성공');
+              }, function (error) {
+                // error
+              });
         });
       });
 
@@ -130,11 +141,20 @@ angular.module('App')
 
       });
 
-    $http.get('http://192.168.0.4:8080/removeRoom'+'?pid='+chat.id+'&uid='+getMyInfo.getEmail())  //서버 게시판 삭제
-      .success(function(result) {
+
+      $http({
+        method: 'POST' ,
+        url: 'http://192.168.1.101:8080/removeRoom',
+        data: {
+          pid: chat.id,
+          uid: getMyInfo.getEmail()
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).success(function(result) {
 
       });
-
     Chats.remove(chat);
   };
 
@@ -143,14 +163,22 @@ angular.module('App')
     Boards.setEmpty();
     $ionicHistory.clearHistory();
     $ionicHistory.clearCache();
-    $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+roomId)
-      .success(function(result) {
-          var board = result.board;
-          for (var i = 0; i < parseInt(result.boardLength); i++) {
-            Boards.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits, board[i].comments);
-          }
-          $state.go('tabs.board',{chatId:roomId});
+
+    $http({
+      method: 'POST' ,
+      url: 'http://192.168.1.101:8080/getBoard',
+      data: {
+        pid: roomId
+      },
+      headers: {
+        'Content-Type': 'application/json'
       }
-    )
+    }).success(function(result) {
+      var board = result.board;
+      for (var i = 0; i < parseInt(result.boardLength); i++) {
+        Boards.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits, board[i].comments);
+      }
+      $state.go('tabs.board',{chatId:roomId});
+    });
   }
 })

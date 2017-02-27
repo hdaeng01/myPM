@@ -7,7 +7,7 @@ angular.module('App')
   mySocket.emit('joinRoom',getRoomId.get());
   $scope.hideTime = true;
 
-  $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")
+  $cordovaFile.readAsText(cordova.file.dataDirectory, getRoomId.get()+".json")  //프로젝트에 저장되어 있는 채팅 내용 불러오기.
     .then(function (success) {
       // success
       var tmp = JSON.parse(success);
@@ -15,13 +15,13 @@ angular.module('App')
         for (var i = 0; i < tmp.chatContents.length; i++) {
           $scope.messages.push({sender:tmp.chatContents[i].sender ,chatContent:tmp.chatContents[i].chatContent, uid:tmp.chatContents[i].uid});
         }
-        $ionicScrollDelegate.scrollBottom();
+        $ionicScrollDelegate.scrollBottom();  //$ionicScrollDelegate이 ion-content안에 ion-scroll의 scroll을 메소드대로 통제한다.
       }
     }, function (error) {
       // error
     });
 
-  document.addEventListener('deviceready', function () {
+  document.addEventListener('deviceready', function () {  //backgroud에서 채팅을 받기위한 ionic api.
     // cordova.plugins.backgroundMode is now available
 
     mySocket.on('chatMessage', function(message){

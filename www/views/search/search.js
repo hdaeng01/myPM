@@ -1,7 +1,7 @@
 angular.module('App')
-.controller('SearchCtrl', function($scope, $stateParams, $http, $state, $cordovaFile, Chats) {
+.controller('SearchCtrl', function($scope, $stateParams, $http, $state, $cordovaFile, Chats) {  //프로젝트 번호를 이용해서 프로젝트를 찾는 뷰.
   $scope.searchRoom = function(){
-    $scope.pid = this.pid;
+    $scope.pid = this.pid;  //프로젝트 번호를 가져온다.
     if (Chats.get($scope.pid)) {
       alert('기존에 존재하는 프로젝트입니다.');
     }else {
@@ -11,7 +11,17 @@ angular.module('App')
           var tmp = JSON.parse(success);
           var token = tmp.token;
 
-          $http.get('http://192.168.0.4:8080/searchRoom'+'?pid='+$scope.pid+'&token='+token).success(function(project) {
+          $http({
+            method: 'POST' ,
+            url: 'http://192.168.1.101:8080/searchRoom',
+            data: {
+              pid: $scope.pid,
+              token: token,
+            },
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).success(function(project) {
             if (project.exist) {  //res.json으로 받은 결과는 JSON.parse를 한 결과로 받는다.
               Chats.add(project.pname, $scope.pid);
 
@@ -44,7 +54,7 @@ angular.module('App')
             } else{
               alert('해당정보없음');
             }
-        });
+          })
       })
     }
   }

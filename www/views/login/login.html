@@ -1,8 +1,8 @@
 <ion-view hide-nav-bar="true">
   <ion-content>
-    <div class="list" id="login" style=" background-color:#fff; padding:15% 15% 15% 15%">
+    <div class="list" id="login" style=" background-color:#fff; padding:15% 15% 15% 15%"> <!-- 로그인화면 위치 설정 -->
       <h2 style="text-align:center;">Login</h2>
-      <form ng-submit="doSubmit()">
+      <form ng-submit="doSubmit()"> <!-- 로그인 버튼을 눌렀을 때 doSubmit() 함수 실행 -->
         <label class="item item-input item-floating-label">
           <input type="text" placeholder="id" ng-model="username">
         </label>
@@ -11,9 +11,9 @@
         </label>
         <button class="button button-block button-positive" type="submit">login</button>
       </form>
-        <button class="button button-block button-positive" ng-click="showModal()">register</button>
+        <button class="button button-block button-positive" ng-click="showModal()">register</button> <!-- 일반가입 -->
 
-      <div class="button-bar" title="Login with">
+      <div class="button-bar" title="Login with"> <!-- auth 가입 -->
         <a class="button button-icon icon ion-social-facebook" ng-click="logFacebook()"></a>
         <a class="button button-icon icon ion-social-googleplus" ng-click="logGoogle()"></a>
       </div>

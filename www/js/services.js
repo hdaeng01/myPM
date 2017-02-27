@@ -1,6 +1,6 @@
 angular.module('App.services', [])
 
-.factory('Chats', function() {
+.factory('Chats', function() {  //프로젝트들을 채팅방개념으로 인식.
   var chats = [//{  //프로젝트들의 모임
   //   id: 0,
   //   name: 'Ben Sparrow',
@@ -47,7 +47,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.0.4:8080');
+  var myIoSocket = io.connect('http://192.168.1.101:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
