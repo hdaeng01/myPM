@@ -60,6 +60,7 @@ angular.module('App', ['ionic', 'App.services', 'btford.socket-io', 'ngCordova',
       }
     })
     .state('tabs.board-detail', {
+      cache: false,
       url: '/board/board-detail/:boardId',
       views: {
         'tab-board': {
