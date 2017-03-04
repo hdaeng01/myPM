@@ -49,22 +49,32 @@ angular.module('App')
   }, false);
 
   $scope.sendMessage = function(){
-    $scope.disableFlag = "false";
-    var message = {
-      roomId: getRoomId.get(),
-      sender: getMyInfo.get(),
-      uid: getMyInfo.getEmail(),
-      chatContent: this.messageText
-    };
-    mySocket.emit('chatMessage', message);
-
-    message = {
-      sender: getMyInfo.get(),
-      uid: getMyInfo.getEmail(),
-      chatContent: this.messageText
-    };
+    var m = this.messageText;
     this.messageText = '';
-    $scope.pushMessage(message);
+    
+    $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")
+      .then(function (success) {
+        // success
+        var tmp = JSON.parse(success);
+        var token = tmp.token;
+        $scope.disableFlag = "false";
+        var message = {
+          roomId: getRoomId.get(),
+          sender: getMyInfo.get(),
+          uid: getMyInfo.getEmail(),
+          chatContent: m,
+          token: token
+        };
+        mySocket.emit('chatMessage', message);
+
+        message = {
+          sender: getMyInfo.get(),
+          uid: getMyInfo.getEmail(),
+          chatContent: m
+        };
+
+        $scope.pushMessage(message);
+        })
   }
 
   mySocket.on('$destroy', function(){

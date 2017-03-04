@@ -36,7 +36,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
+    url: 'http://192.168.1.101:8080/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
     data: {
         email: $scope.regiEmail,
         password: $scope.regiPass,
@@ -64,7 +64,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/auth/login/', //로그인시 정보를 서버에 보내 확인.
+    url: 'http://192.168.1.101:8080/auth/login/', //로그인시 정보를 서버에 보내 확인.
     data: {
       username: $scope.username,
       password: $scope.password

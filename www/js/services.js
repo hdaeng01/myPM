@@ -47,7 +47,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.0.4:8080');
+  var myIoSocket = io.connect('http://192.168.1.101:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -190,4 +190,20 @@ angular.module('App.services', [])
       }, 350);
     }
   };
+}])
+
+.directive('fileModel', ['$parse', function ($parse){
+    return {
+      scope : false,
+      restrict : 'A',
+      link : function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            element.bind('change', function(){
+                scope.$apply(function(){
+                  modelSetter(scope, element[0].files[0]);
+                });
+              });
+            }
+          };
 }]);

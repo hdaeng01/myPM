@@ -67,7 +67,7 @@ angular.module('App')
 
         $http({
         method: 'POST' ,
-        url: 'http://192.168.0.4:8080/createRoom',
+        url: 'http://192.168.1.101:8080/createRoom',
         data: {
           pname: $scope.roomName,
           captain_id: getMyInfo.getEmail(),
@@ -144,7 +144,7 @@ angular.module('App')
 
       $http({
         method: 'POST' ,
-        url: 'http://192.168.0.4:8080/removeRoom',
+        url: 'http://192.168.1.101:8080/removeRoom',
         data: {
           pid: chat.id,
           uid: getMyInfo.getEmail()
@@ -166,7 +166,7 @@ angular.module('App')
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.0.4:8080/getBoard',
+      url: 'http://192.168.1.101:8080/getBoard',
       data: {
         pid: roomId
       },
