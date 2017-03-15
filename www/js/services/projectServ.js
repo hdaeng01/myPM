@@ -1,7 +1,7 @@
 (function(){
-  angular.module('App.services').service('projectServ', ['$q', projectServ]);
+  angular.module('App.services').service('projectServ', ['$q', projectServ, $stateParams, $http, getRoomId, Chats]);
 
-  function projectServ($q){
+  function projectServ($q, $stateParams, $http, getRoomId, Chats){
     this.getProjectInfo = getProjectInfo;
 
     /*
@@ -24,6 +24,23 @@
         }
     }
     */
+
+    getRoomId.add($stateParams.chatId);
+    $scope.project_name = Chats.get(getRoomId.get());
+
+    $http({
+      method: 'POST' ,
+      url: 'http://192.168.1.100:8080/getTeammate',
+      data: {
+        pid: getRoomId.get()
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).success(function(result) {
+      $scope.members = result.teamMate;
+    })
+
     function getProjectInfo(){
 
 

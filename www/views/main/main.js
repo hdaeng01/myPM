@@ -71,6 +71,7 @@ angular.module('App')
         data: {
           pname: $scope.roomName,
           captain_id: getMyInfo.getEmail(),
+          captain_name: getMyInfo.get(),
           token: token
         },
         headers: {
