@@ -10,7 +10,7 @@ angular.module('App')
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.1.101:8080/getPage',
+      url: 'http://192.168.1.100:8080/getPage',
       data: {
         pid: getRoomId.get(),
         page: $scope.page
@@ -66,7 +66,7 @@ angular.module('App')
 
         $http({
           method: 'POST' ,
-          url: 'http://192.168.1.101:8080/addBoard',
+          url: 'http://192.168.1.100:8080/addBoard',
           data: {
             pid: getRoomId.get(),
             subject: subject,
@@ -75,9 +75,8 @@ angular.module('App')
             name: getMyInfo.get(),
             token: token
           },
-          transformRequest: angular.identity,
           headers: {
-            'Content-Type': undefined
+            'Content-Type': 'application/json'
           }
         }).success(function(result) {
           Boards.unshift(result, time, subject, content, getMyInfo.get(), 0, []);
@@ -100,7 +99,7 @@ angular.module('App')
 
   $http({
     method: 'POST' ,
-    url: 'http://192.168.1.101:8080/setHits',
+    url: 'http://192.168.1.100:8080/setHits',
     data: {
       pid: getRoomId.get(),
       title: $stateParams.boardId
@@ -121,7 +120,7 @@ angular.module('App')
 
         $http({
           method: 'POST' ,
-          url: 'http://192.168.1.101:8080/deleteDetail',
+          url: 'http://192.168.1.100:8080/deleteDetail',
           data: {
             pid: getRoomId.get(),
             title: $stateParams.boardId,
@@ -148,7 +147,7 @@ angular.module('App')
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.1.101:8080/setComments',
+      url: 'http://192.168.1.100:8080/setComments',
       data: {
         pid: getRoomId.get(),
         title: $stateParams.boardId,

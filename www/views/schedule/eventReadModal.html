@@ -1,0 +1,32 @@
+<ion-modal-view>
+  <ion-header-bar class='bar-positive' align-title='left'>
+    <h1 class='title'>Events on <font ng-if='data.date'>"{{functions.format(data.date, config.dateForm)}}"</font></h1>
+    <button class='button' ng-click='functions.hide();'>
+      Cancel
+    </button>
+  </ion-header-bar>
+  <ion-content>
+    <b>Total Event : </b>{{data.events.length}}
+    <ion-list class='list-inset'>
+      <ion-item ng-repeat='event in data.events track by $index' style='margin:0;padding:0;'>
+        <!-- <div class='card'> -->
+          <div class='item' style='background-color:{{event.color}};color:white;'>
+            <h2 style='color:inherit;'><b>{{event.title}}</b></h2>
+          </div>
+          <div class='item item-text-wrap'>
+            <div><b>From Date</b> : {{functions.format(event.startDate, config.dateForm)}}</div>
+            <div><b>To Date</b> : {{functions.format(event.endDate, config.dateForm)}}</div>
+          </div>
+          <div class='item button-bar button-small'>
+            <a class='button button-small button-calm' on-touch='functions.detail(event.sid);'>
+              <b>Detail</b>
+            </a>
+            <a class='button button-small button-assertive' on-touch='functions.delete(event.sid);'>
+              <b>Delete</b>
+            </a>
+          </div>
+        <!-- </div> -->
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-modal-view>

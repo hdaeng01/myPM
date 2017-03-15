@@ -7,7 +7,7 @@ angular.module('App')
       var pid = str[0].substring(str[0].length-9,str[0].length-1);
       getRoomId.add(pid);
       Boards.setEmpty();
-      $http.get('http://192.168.1.101:8080/getBoard'+'?pid='+pid)
+      $http.get('http://192.168.1.100:8080/getBoard'+'?pid='+pid)
         .success(function(result) {
           var board = result.board;
           for (var i = 0; i < parseInt(result.boardLength); i++) {
@@ -31,5 +31,9 @@ angular.module('App')
   $scope.goChat = function(){
     $scope.roomId=getRoomId.get();
     $state.go('tabs.chats',{chatId:$scope.roomId});
+  }
+  $scope.goSchedule = function(){
+    $scope.roomId=getRoomId.get();
+    $state.go('tabs.schedule',{chatId:$scope.roomId});
   }
 });

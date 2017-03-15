@@ -13,7 +13,7 @@ angular.module('App')
 
           $http({
             method: 'POST' ,
-            url: 'http://192.168.1.101:8080/searchRoom',
+            url: 'http://192.168.1.100:8080/searchRoom',
             data: {
               pid: $scope.pid,
               token: token,

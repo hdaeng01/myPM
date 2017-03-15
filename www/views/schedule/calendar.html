@@ -1,0 +1,162 @@
+<style>
+.read-mode{
+  background-color:#0f5df2;
+  color:white;
+  text-align:center;
+}
+.write-mode{
+  background-color:#f20d0f;
+  color:white;
+  text-align:center;
+}
+.selected {
+  background-color: #0066ff;
+  color : white;
+}
+.unselected {
+  background-color : white;
+  color : black;
+}
+.day-name-row {
+  height:5%;
+  background-color:#f2f2f2;
+  width:100%;
+  margin:0;
+  padding:0 1% 0 1%;
+  vertical-align:bottom;
+}
+.day-name-cell{
+  padding:0;
+  margin:0;
+  width:14%;
+  height:100%;
+}
+.week-row {
+  width : 100%;
+  margin:0;
+  padding : 0 1% 0 1%;
+  border-left:none;
+  border-right:none;
+  border-bottom:none;
+}
+.day-cell {
+  float:left;
+  padding:0;
+  margin:0;
+  width:14%;
+  height:100%;
+}
+.day-cell-header{
+  padding:0;
+  margin:0 0 1% 0;
+  border:0;
+  height:21%;
+}
+.day-cell-body{
+  padding:0;
+  margin:0;
+  border:0;
+  height:78%;
+}
+#calendar-body{
+  width:100%;
+  height:75%;
+  font-size:0px;
+  padding:0;
+  margin:0;
+  background-color: green;
+}
+.event-list{
+  padding:0;
+  margin:0;
+  height:100%;
+}
+.event-item{
+  margin:1% 0 1% 0;
+  padding:0;
+  height:23%;
+  border:0;
+}
+.event-item-more{
+  margin:2% 0 0 0;
+  padding:0;
+  height:23%;
+  border:0;
+  background-color:gray;
+  color:white;
+}
+.event-empty{
+  padding:0;
+  margin:0;
+  height:100%;
+  width:100%;
+}
+.event-fill{
+  padding:0;
+  margin:0;
+  height:100%;
+  width:100%;
+  color:white;
+}
+</style>
+
+<div class='list' id='calendar' style='height:100%;width:100%;font-size:0px;'>
+  <div class='item' ng-controller='calendarHeaderCtrl' id='calendar-head-info' style='height:15%;'>
+    <div class='row' style='height:100%;width:100%;'>
+      <div class='col' on-touch='prev();'>
+        <center><h1>
+        <i class='ion-arrow-left-b'>
+        </i>
+        </h1></center>
+      </div>
+      <div class='col col-80'>
+        <center><h1><b>
+          {{date.year}}, {{date.month}}
+        </b></h1></center>
+      </div>
+      <div class='col' on-touch='next();'>
+        <center><h1>
+        <i class='ion-arrow-right-b'>
+        </i>
+        </h1></center>
+      </div>
+    </div>
+  </div>
+  <div class='item button-full button-small' ng-class='{"read":"read-mode", "write":"write-mode"}[config.mode]' on-touch='$event.preventDefault();changeMode();' style='height:5%;margin:0 0 0 0;'>
+    <b>{{mode_text}}</b>
+  </div>
+  <div class='item row day-name-row' id='calendar-head-days'>
+      <div class='col day-name-cell' ng-repeat='dayName in config.dayNames' >
+        <h3>
+        {{dayName}}
+        </h3>
+      </div>
+  </div>
+  <div id='calendar-body' ng-controller='calendarBodyCtrl' on-drag='functions.onDrag($event);' on-touch='functions.onTouch($event);' on-release='functions.onRelease($event);'>
+    <div class='item week-row' ng-repeat='week in data.calendar.weeks track by $index' style='height:{{config.weekHeight}}%;'>
+      <div class='list day-cell' index='{{day.index}}' ng-repeat='day in week track by $index'>
+        <div class='item day-cell-header' ng-class='{true : "selected", false : "unselected"}[day.selected]'>
+          <h3 style='color:inherit;'><b>{{day.day.getDate()}}</b></h3>
+        </div>
+        <div class='item day-cell-body'>
+          <div class='list event-list' ng-if='day.eventInfo'>
+            <div class='item event-item' ng-repeat='event in day.eventInfo.events track by $index' ng-switch='event'>
+              <h5><div ng-switch-when='false' class='event-empty'>&nbsp;</div></h5>
+              <h5><div ng-switch-default class='event-fill' style='background-color:{{event.color}}'>
+                <div ng-switch='event.viewInfo.show_start_date == day.day'>
+                  <div ng-switch-when='true'>{{event.title}}</div>
+                  <div ng-switch-default>&nbsp;</div>
+                </div>
+              </div></h5>
+            </div>
+            <div class='item event-item' ng-show='day.eventInfo.more'>
+              <h5><center>
+                <font style='color:blue;'><b><i class='ion-plus-circled'></i>&nbsp;{{day.eventInfo.more}}...</b></font>
+              </center></h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
