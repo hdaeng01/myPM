@@ -1,5 +1,5 @@
 (function(){
-  angular.module('App.services').service('projectServ', ['$q', projectServ, $stateParams, $http, getRoomId, Chats]);
+  angular.module('App.services').service('projectServ', ['$q', '$stateParams', '$http', 'getRoomId', 'Chats', projectServ]);
 
   function projectServ($q, $stateParams, $http, getRoomId, Chats){
     this.getProjectInfo = getProjectInfo;
@@ -39,6 +39,7 @@
       }
     }).success(function(result) {
       $scope.members = result.teamMate;
+      console.log($scope.members);
     })
 
     function getProjectInfo(){

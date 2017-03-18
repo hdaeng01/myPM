@@ -47,7 +47,7 @@ angular.module('App.services', [])
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.1.100:8080');
+  var myIoSocket = io.connect('http://192.168.1.102:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -206,4 +206,17 @@ angular.module('App.services', [])
               });
             }
           };
-}]);
+}])
+
+.directive('projectDirec', function (){
+  return {
+    scope : false,
+    restrict : 'E',
+    controller : ['$scope', 'projectServ', function($scope, projectServ){
+      $scope.gotoInfo = function(){
+        $state.go('info');
+      };
+    }],
+    template : '<a ng-click="gotoInfo();"><span class="ion-ios-information-outline"></span></a>'
+  };
+});

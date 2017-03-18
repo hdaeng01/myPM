@@ -1,0 +1,63 @@
+<ion-view view-title="Info">
+  <ion-content class='padding'>
+    <div class='list' ng-controller='infoCtrl'>
+      <div class='item item-divider'>
+        <h2><b>
+          {{data.project.project_name}}
+        </b></h2>
+      </div>
+      <div class='card item item-icon-left'>
+        <i class='icon ion-log-in'></i>
+        <div>
+          <b>
+            Project Start Date
+          </b>
+        </div>
+        <div>
+          {{data.project.project_cdate}}
+        </div>
+      </div>
+      <div class='card item item-icon-left'>
+        <i class='icon ion-filing'></i>
+        <div>
+          <b>
+            Files in Project
+          </b>
+        </div>
+        <div class='list'>
+          <div class='item'>
+            <div class='padding-horizontal' style='width:100%;'>
+              <div ng-repeat='d in data.project.files track by $index' style='width:{{d.percentage}}%;background-color:{{d.color}};height:10px;float:left;'>
+                &nbsp;
+              </div>
+            </div>
+          </div>
+          <div class='item'>
+            <b>Total file : </b>{{data.meta.total_file}} entries
+          </div>
+          <div class='list'>
+            <div class='item item-icon-left item-text-wrap' ng-repeat='file in data.project.files track by $index'>
+              <i class='icon ion-stop' style='color:{{file.color}};'></i>
+              <div>
+                {{file.text}} : {{file.count}} entries({{((file.count / data.project.meta.total_file) * 100).toFixed(2)}}%)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='card item item-icon-left'>
+        <i class='icon ion-android-contacts'></i>
+        <div>
+          <b>Member in Project</b>
+        </div>
+        <div class='list'>
+          <div class='item item-text-wrap' ng-repeat='member in data.project.members track by $index'>
+            <div>{{member.type}}</div>
+            <div>{{member.name}}</div>
+            <div><b>Posts : </b>{{member.postCnt}} entries({{((member.postCnt / data.project.meta.total_post) * 100).toFixed(2)}}%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

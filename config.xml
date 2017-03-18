@@ -56,7 +56,7 @@
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
-    <allow-navigation href="http://192.168.1.100:8100" />
+    <allow-navigation href="http://192.168.1.102:8100" />
     <plugin name="cordova-plugin-facebook4" spec="~1.7.4">
         <variable name="APP_ID" value="1165650960200214" />
         <variable name="APP_NAME" value="fa" />

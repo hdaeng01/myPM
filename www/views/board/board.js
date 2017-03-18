@@ -1,16 +1,21 @@
 angular.module('App')
-.controller('BoardCtrl', function($scope, $stateParams, $ionicModal, $http, Chats, Boards, $ionicNavBarDelegate, getRoomId, getMyInfo, $cordovaFile) {
+.controller('BoardCtrl', function($scope, $state, $stateParams, $ionicModal, $http, Chats, Boards, $ionicNavBarDelegate, getRoomId, getMyInfo, $cordovaFile) {
   $scope.chatRoom = Chats.get($stateParams.chatId);
   $scope.board = Boards.get($stateParams.boardId);
   $scope.page = 0;
   $scope.total = 1;
+
+  $scope.projectInfo = function(){
+    console.log("aaaaaaaaaaaaaa");
+    $state.go('info');
+  }
 
   $scope.getPage = function(){  //게시판 글 10개를 넘어가면 다음 10개를 서버에서 불러온다. ion-infinite-scroll를 이용해 무한 스크롤로 로딩.
     $scope.page++;
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.1.100:8080/getPage',
+      url: 'http://192.168.1.102:8080/getPage',
       data: {
         pid: getRoomId.get(),
         page: $scope.page
@@ -66,7 +71,7 @@ angular.module('App')
 
         $http({
           method: 'POST' ,
-          url: 'http://192.168.1.100:8080/addBoard',
+          url: 'http://192.168.1.102:8080/addBoard',
           data: {
             pid: getRoomId.get(),
             subject: subject,
@@ -99,7 +104,7 @@ angular.module('App')
 
   $http({
     method: 'POST' ,
-    url: 'http://192.168.1.100:8080/setHits',
+    url: 'http://192.168.1.102:8080/setHits',
     data: {
       pid: getRoomId.get(),
       title: $stateParams.boardId
@@ -120,7 +125,7 @@ angular.module('App')
 
         $http({
           method: 'POST' ,
-          url: 'http://192.168.1.100:8080/deleteDetail',
+          url: 'http://192.168.1.102:8080/deleteDetail',
           data: {
             pid: getRoomId.get(),
             title: $stateParams.boardId,
@@ -147,7 +152,7 @@ angular.module('App')
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.1.100:8080/setComments',
+      url: 'http://192.168.1.102:8080/setComments',
       data: {
         pid: getRoomId.get(),
         title: $stateParams.boardId,

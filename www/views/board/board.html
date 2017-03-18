@@ -1,4 +1,9 @@
 <ion-view view-title="{{chatRoom.name}}">
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-click="projectInfo()">
+      <span class="icon ion-ios-information-outline"></span>
+    </button>
+  </ion-nav-buttons>
   <ion-floating-button click="edit()" has-footer="false" button-color="#2AC9AA" icon="ion-edit" iconColor="#fff">
   </ion-floating-button>
   <ion-content>

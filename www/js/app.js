@@ -105,6 +105,11 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
       templateUrl: 'views/search/search.html',
       controller: 'SearchCtrl'
     })
+    .state('info', {
+      url : '/info',
+      templateUrl : 'views/info/tab-info.html',
+      controller: 'infoCtrl'
+    })
 
   $urlRouterProvider.otherwise('/login');
 })
