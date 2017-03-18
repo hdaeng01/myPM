@@ -1,7 +1,8 @@
 (function(){
-  angular.module('App').controller('infoCtrl', ['$scope', 'projectServ', infoCtrl]);
+  angular.module('App.controllers').controller('infoCtrl', ['$scope', 'projectServ', infoCtrl]);
 
   function infoCtrl($scope, projectServ){
+    console.log("vvvvvvvvvvvv");
     $scope.config = {
       colors : ['#ff6666', '#ff944d', '#ffff80', '#99ff99', '#80b3ff', '#9a9ae5', '#cccccc']
     };

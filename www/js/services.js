@@ -1,4 +1,4 @@
-angular.module('App.services', [])
+angular.module('App.factories')
 
 .factory('Chats', function() {  //프로젝트들을 채팅방개념으로 인식.
   var chats = [//{  //프로젝트들의 모임

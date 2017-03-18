@@ -1,5 +1,5 @@
 (function(){
-  angular.module('App.services').service('projectServ', ['$q', '$stateParams', '$http', 'getRoomId', 'Chats', projectServ]);
+  angular.module('App.services').service('projectServ', projectServ);
 
   function projectServ($q, $stateParams, $http, getRoomId, Chats){
     this.getProjectInfo = getProjectInfo;
@@ -25,52 +25,45 @@
     }
     */
 
-    getRoomId.add($stateParams.chatId);
-    $scope.project_name = Chats.get(getRoomId.get());
-
-    $http({
-      method: 'POST' ,
-      url: 'http://192.168.1.100:8080/getTeammate',
-      data: {
-        pid: getRoomId.get()
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).success(function(result) {
-      $scope.members = result.teamMate;
-      console.log($scope.members);
-    })
-
     function getProjectInfo(){
-
-
       return $q(function(resolve, reject) {
-        var data = {
-          project_name : 'test1',
-          project_cdate : '2017-02-05 13:23:04',
-          members : [
-            {type : 'Manager', name : '황정우', postCnt : 3},
-            {type : 'Member', name : '송주용', postCnt : 2},
-            {type : 'Member', name : '이재구', postCnt : 2},
-            {type : 'Member', name : 'test1', postCnt : 1},
-            {type : 'Member', name : 'test2', postCnt : 4},
-            {type : 'Member', name : 'test3', postCnt : 3},
-            {type : 'Member', name : 'test4', postCnt : 7}
-          ],
-          files : [
-            {type : 'image', count : 3},
-            {type : 'text', count : 2},
-            {type : 'pdf', count : 4},
-            {type : 'etc', count : 3},
-            {type : 't1', count : 5},
-            {type : 't2', count : 4},
-            {type : 't3', count : 3},
-            {type : 't4', count : 1}
-          ]
-        };
-        return resolve(data);
-      });;
+        var project_name = Chats.get(getRoomId.get());
+
+        $http({
+          method: 'POST' ,
+          url: 'http://192.168.1.102:8080/getTeammate',
+          data: {
+            pid: getRoomId.get()
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).success(function(result) {
+          // $scope.members = result.teamMate;
+          var project_name = result.teamMate[0];
+          var project_cdate = result.teamMate[1];
+          var members = [];
+          for (var i = 2; i < result.teamMate.length; i++) {
+            members.push(result.teamMate[i]);
+          }
+          var data = {
+            project_name : project_name,
+            project_cdate : project_cdate,
+            members : members,
+            files : [
+              {type : 'image', count : 3},
+              {type : 'text', count : 2},
+              {type : 'pdf', count : 4},
+              {type : 'etc', count : 3},
+              {type : 't1', count : 5},
+              {type : 't2', count : 4},
+              {type : 't3', count : 3},
+              {type : 't4', count : 1}
+            ]
+          };
+          return resolve(data);
+        });
+      });
     }
   }
 })();

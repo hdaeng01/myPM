@@ -7,8 +7,9 @@
 // 'starter.controllers' is found in controllers.js
 
 angular.module('App.constants', []);
+angular.module('App.factories', []);
 angular.module('App.directives', ['App.constants', 'App.services', 'ionic']);
-angular.module('App.services', ['App.constants']);
+angular.module('App.services', ['App.constants', 'App.factories']);
 angular.module('App.controllers', ['App.services', 'ionic']);
 angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth', 'ion-floating-menu', 'ionic.cloud', 'App.controllers', 'App.services', 'App.constants', 'App.directives'])
 
