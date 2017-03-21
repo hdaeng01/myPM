@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush, push, $ionicHistory) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Chats, $state, getRoomId, $ionicNavBarDelegate, $http, getMyInfo, $cordovaFile, Boards, $timeout, $ionicPush, push, $ionicHistory, Project) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
 
@@ -65,34 +65,26 @@ angular.module('App')
         var tmp = JSON.parse(success);
         var token = tmp.token;
 
-        $http({
-        method: 'POST' ,
-        url: 'http://192.168.1.102:8080/createRoom',
-        data: {
+        Project.post({
           pname: $scope.roomName,
           pdate: new Date(),
           captain_id: getMyInfo.getEmail(),
           captain_name: getMyInfo.get(),
           token: token
-        },
-        headers: {
-          'Content-Type': 'application/json'
-        }
-        }).success(function(pid) {
+        },function(res){
+          var pid = res.pid;
           Chats.add($scope.roomName,pid);
           $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //pids파일에서 기존의 프로젝트들을 불러온 후 집어 넣어준다.
           .then(function(success){
             var p = JSON.parse(success);
             p.pids.push({pid : pid , projectName : $scope.roomName , boardLength : 0});
+
             $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
               .then(function (success) {
                 // success
               }, function (error) {
                 // error
               });
-            }, function(error){
-
-            });
             var data = {
               projectName: $scope.roomName,
               chatContents: []
@@ -104,8 +96,51 @@ angular.module('App')
               }, function (error) {
                 // error
               });
+            });
+          });
         });
-      });
+
+        // $http({
+        // method: 'POST' ,
+        // url: 'http://192.168.0.4:8080/createRoom',
+        // data: {
+        //   pname: $scope.roomName,
+        //   pdate: new Date(),
+        //   captain_id: getMyInfo.getEmail(),
+        //   captain_name: getMyInfo.get(),
+        //   token: token
+        // },
+        // headers: {
+        //   'Content-Type': 'application/json'
+        // }
+        // }).success(function(pid) {
+        //   Chats.add($scope.roomName,pid);
+        //   $cordovaFile.readAsText(cordova.file.dataDirectory, "pids.json")  //pids파일에서 기존의 프로젝트들을 불러온 후 집어 넣어준다.
+        //   .then(function(success){
+        //     var p = JSON.parse(success);
+        //     p.pids.push({pid : pid , projectName : $scope.roomName , boardLength : 0});
+        //     $cordovaFile.writeFile(cordova.file.dataDirectory, "pids.json", JSON.stringify(p), true)
+        //       .then(function (success) {
+        //         // success
+        //       }, function (error) {
+        //         // error
+        //       });
+        //     }, function(error){
+        //
+        //     });
+        //     var data = {
+        //       projectName: $scope.roomName,
+        //       chatContents: []
+        //     }
+        //     $cordovaFile.writeFile(cordova.file.dataDirectory, pid+".json", JSON.stringify(data), false)  //해당 프로젝트 파일도 생성. 이곳에 채팅 내용을 저장.
+        //       .then(function (success) {
+        //         // success
+        //         console.log(pid+'.json 파일 생성 성공');
+        //       }, function (error) {
+        //         // error
+        //       });
+        // });
+      // });
 
     this.roomName = '';
     $scope.hideModal();
@@ -146,7 +181,7 @@ angular.module('App')
 
       $http({
         method: 'POST' ,
-        url: 'http://192.168.1.102:8080/removeRoom',
+        url: 'http://192.168.0.4:8080/removeRoom',
         data: {
           pid: chat.id,
           uid: getMyInfo.getEmail()
@@ -168,7 +203,7 @@ angular.module('App')
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.1.102:8080/getBoard',
+      url: 'http://192.168.0.4:8080/getBoard',
       data: {
         pid: roomId
       },

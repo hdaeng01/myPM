@@ -47,7 +47,7 @@ angular.module('App.factories')
 })
 
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.1.102:8080');
+  var myIoSocket = io.connect('http://192.168.0.4:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -173,6 +173,23 @@ angular.module('App.factories')
       return push;
     }
   }
+})
+
+.factory('HttpServ', function(){
+  return {
+    url : 'http://192.168.0.4:8080/'
+  }
+})
+
+.factory('Project', function($resource, HttpServ){
+  return $resource(HttpServ.url+'room/',{},{
+    post:{
+      method: 'POST'
+    },
+    delete:{
+      method: 'DELETE'
+    }
+  });
 })
 
 .directive('focusMe',['$timeout',function ($timeout) {
