@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('TabCtrl', function($scope, $rootScope, $stateParams, $state, Chats, getRoomId, $http, $cordovaFile, Boards, push) {
+.controller('TabCtrl', function($scope, $rootScope, $stateParams, $state, Chats, getRoomId, $http, $cordovaFile, Boards, push, HttpServ) {
   $rootScope.$on('cloud:push:notification', function(event, data) {
     var msg = data.message;
     var str = msg.text.split(' ');
@@ -7,17 +7,38 @@ angular.module('App')
       var pid = str[0].substring(str[0].length-9,str[0].length-1);
       getRoomId.add(pid);
       Boards.setEmpty();
-      $http.get('http://192.168.0.4:8080/getBoard'+'?pid='+pid)
-        .success(function(result) {
-          var board = result.board;
-          for (var i = 0; i < parseInt(result.boardLength); i++) {
-            Boards.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits);
-            console.log(board[i].id);
-          }
-          $scope.$watch('Boards', function(newValue, oldValue){
-          	 $state.go('tabs.board',{chatId:pid});
-          }, true);
-        });
+
+      $http({
+        method: 'POST' ,
+        url: HttpServ.url+'/getBoard',
+        data: {
+          pid: pid
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).success(function(result) {
+        var board = result.board;
+        for (var i = 0; i < parseInt(result.boardLength); i++) {
+          Boards.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits);
+          console.log(board[i].id);
+        }
+        $scope.$watch('Boards', function(newValue, oldValue){
+           $state.go('tabs.board',{chatId:pid});
+        }, true);
+      });
+      // 
+      // $http.get(HttpServ.url+'/getBoard'+'?pid='+pid)
+      //   .success(function(result) {
+      //     var board = result.board;
+      //     for (var i = 0; i < parseInt(result.boardLength); i++) {
+      //       Boards.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits);
+      //       console.log(board[i].id);
+      //     }
+      //     $scope.$watch('Boards', function(newValue, oldValue){
+      //     	 $state.go('tabs.board',{chatId:pid});
+      //     }, true);
+      //   });
     } else{
       var pid = str[0].substring(str[0].length-9,str[0].length-1);
       getRoomId.add(pid);

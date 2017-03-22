@@ -177,20 +177,20 @@ angular.module('App.factories')
 
 .factory('HttpServ', function(){
   return {
-    url : 'http://192.168.0.4:8080/'
+    url : 'http://192.168.0.4:8080'
   }
 })
 
-.factory('Project', function($resource, HttpServ){
-  return $resource(HttpServ.url+'room/',{},{
-    post:{
-      method: 'POST'
-    },
-    delete:{
-      method: 'DELETE'
-    }
-  });
-})
+// .factory('Project', function($resource, HttpServ){
+//   return $resource(HttpServ.url+'room/',{},{
+//     post:{
+//       method: 'POST'
+//     },
+//     delete:{
+//       method: 'POST'
+//     }
+//   });
+// })
 
 .directive('focusMe',['$timeout',function ($timeout) {
   return {
