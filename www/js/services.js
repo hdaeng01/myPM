@@ -1,53 +1,36 @@
-angular.module('App.factories')
+angular.module('App.factories',[])
 
-.factory('Chats', function() {  //프로젝트들을 채팅방개념으로 인식.
-  var chats = [//{  //프로젝트들의 모임
-  //   id: 0,
-  //   name: 'Ben Sparrow',
-  //   lastText: 'You on your way?',
-  //   face: 'img/ben.png'
-  // }
-  ];
+.factory('Projects', function() {  //프로젝트들을 채팅방개념으로 인식.
+  var projects = [];
   return {
     all: function() {
-      return chats;
+      return projects;
     },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
+    remove: function(project) {
+      projects.splice(projects.indexOf(project), 1);
     },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === chatId) {
-          return chats[i];
+    get: function(pid) {
+      for (var i = 0; i < projects.length; i++) {
+        if (projects[i].pid === pid) {
+          return projects[i];
         }
       }
       return null;
     },
-    add: function(name,id,length){
-      chats.push({id:id, name:name, face:'img/'+name+'.png', boardLength:length});
-    },
-    setBoardLength: function(chatId){ //하나의 프로젝트에 있는 게시판의 개수를 올린다.
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id == chatId) {
-          var tmp = parseInt(chats[i].boardLength);
-          tmp++;
-          chats[i].boardLength = tmp.toString();
-          return null;
-        }
-      }
-    },
-    getBoardLength: function(chatId){ //게시판의 개수를 얻는다.
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id == chatId) {
-          return chats[i].boardLength ;
-        }
-      }
+    add: function(_pid,_pname){
+      projects.push({pid:_pid, pname:_pname, img:'img/'+_pname+'.png'});
     }
   };
 })
 
-.factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.0.4:8080');
+.factory('HttpServ', function(){
+  return {
+    url : 'http://192.168.0.4:8080'
+  }
+})
+
+.factory('mySocket', function (socketFactory, HttpServ) {
+  var myIoSocket = io.connect(HttpServ.url);
 
   mySocket = socketFactory({
     ioSocket: myIoSocket
@@ -56,20 +39,20 @@ angular.module('App.factories')
   return mySocket;
 })
 
-.factory('getRoomId', function() {
-  var roomId = ' ';
+.factory('PresentPid', function() {
+  var pid;
 
   return {
-      add : function(room_id){
-        roomId = room_id;
+      set : function(_pid){
+        pid = _pid;
       },
       get : function(){
-        return roomId;
+        return pid;
       }
   };
 })
 
-.factory('Boards', function() {
+.factory('Board', function() {
   var boards = [];
 
   return {
@@ -90,11 +73,11 @@ angular.module('App.factories')
     getLength: function(){
       return boards.length;
     },
-    set: function(id, time, title, content, name, hits, comments){
-      boards.push({id:id, name:name, title:title, content:content, time:time, hits:hits, comments:comments});
+    set: function(_id, _time, _title, _content, _name, _hits, _comments){
+      boards.push({id:_id, name:_name, title:_title, content:_content, time:_time, hits:_hits, comments:_comments});
     },
-    unshift: function(id, time, title, content, name, hits, comments){
-      boards.unshift({id:id, name:name, title:title, content:content, time:time, hits:hits, comments:comments});
+    unshift: function(_id, _time, _title, _content, _name, _hits, _comments){
+      boards.unshift({id:_id, name:_name, title:_title, content:_content, time:_time, hits:_hits, comments:_comments});
     },
     setEmpty: function(){
       boards = [];
@@ -130,22 +113,22 @@ angular.module('App.factories')
   };
 })
 
-.factory('getMyInfo', function() {
+.factory('MyInfo', function() {
   var name;
-  var email;
+  var id;
 
   return {
-    insertName: function(displayName){
-      name=displayName;
+    addName: function(_name){
+      name=_name;
     },
-    insertEmail: function(uname){
-      email=uname;
+    addId: function(_id){
+      id=_id;
     },
-    get: function(){
+    getMyName: function(){
       return name;
     },
-    getEmail: function(){
-      return email;
+    getMyId: function(){
+      return id;
     }
   }
 })
@@ -175,22 +158,25 @@ angular.module('App.factories')
   }
 })
 
-.factory('HttpServ', function(){
-  return {
-    url : 'http://192.168.0.4:8080'
+.factory ('StorageService', function ($localStorage) {
+  $localStorage = $localStorage.$default({
+    things: []
+  });
+  var _get = function () {
+    return $localStorage.things[0];
+  };
+  var _add = function (thing) {
+    $localStorage.things.push(thing);
   }
+  var _remove = function (thing) {
+    $localStorage.things.splice($localStorage.things.indexOf(thing), 1);
+  }
+  return {
+      get: _get,
+      add: _add,
+      remove: _remove
+    };
 })
-
-// .factory('Project', function($resource, HttpServ){
-//   return $resource(HttpServ.url+'room/',{},{
-//     post:{
-//       method: 'POST'
-//     },
-//     delete:{
-//       method: 'POST'
-//     }
-//   });
-// })
 
 .directive('focusMe',['$timeout',function ($timeout) {
   return {

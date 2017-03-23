@@ -1,4 +1,4 @@
-<ion-view view-title="{{chatRoom.name}}">
+<ion-view view-title="{{project.pname}}">
   <ion-nav-buttons side="right">
     <button class="button button-clear" ng-click="projectInfo()">
       <span class="icon ion-ios-information-outline"></span>
@@ -8,7 +8,7 @@
   </ion-floating-button>
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="b in boards" type="item-text-wrap" href="#/tabs/board/board-detail/{{b.id}}">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="b in board" type="item-text-wrap" href="#/tabs/board/board-detail/{{b.id}}">
         <h2>{{b.title}}</h2>
         <h3>{{b.name}}</h3>
         <p>{{b.time}}</p>

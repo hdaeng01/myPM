@@ -1,12 +1,10 @@
 angular.module('App')
-.controller('BoardCtrl', function($scope, $state, $stateParams, $ionicModal, $http, Chats, Boards, $ionicNavBarDelegate, getRoomId, getMyInfo, $cordovaFile) {
-  $scope.chatRoom = Chats.get($stateParams.chatId);
-  $scope.board = Boards.get($stateParams.boardId);
+.controller('BoardCtrl', function($scope, $state, $stateParams, $ionicModal, $http, Projects, Board, $ionicNavBarDelegate, PresentPid, MyInfo, $cordovaFile, HttpServ) {
+  $scope.project = Projects.get($stateParams.pid);
+  // $scope.board = Boards.get($stateParams.pid);
   $scope.page = 0;
   $scope.total = 1;
-
   $scope.projectInfo = function(){
-    console.log("aaaaaaaaaaaaaa");
     $state.go('info');
   }
 
@@ -15,9 +13,9 @@ angular.module('App')
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.0.4:8080/getPage',
+      url: HttpServ.url+'/getPage',
       data: {
-        pid: getRoomId.get(),
+        pid: PresentPid.get(),
         page: $scope.page
       },
       headers: {
@@ -25,7 +23,7 @@ angular.module('App')
       }
     }).success(function(result) {
       for(var i = 0; i<result.board.length; i++){
-        Boards.set(result.board[i].id, result.board[i].time, result.board[i].subject, result.board[i].content, result.board[i].name, result.board[i].hits, result.board[i].comments);
+        Board.set(result.board[i].id, result.board[i].time, result.board[i].subject, result.board[i].content, result.board[i].name, result.board[i].hits, result.board[i].comments);
       };
       $scope.total = result.totalPages;
       $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -35,8 +33,7 @@ angular.module('App')
     });
   }
 
-  $scope.boards = Boards.all(); //처음에 Boards서비스에 저장된 게시들을 불러와 뷰에 나타낸다.
-  getRoomId.add($stateParams.chatId);
+  $scope.board = Board.all(); //처음에 Board서비스에 저장된 게시들을 불러와 뷰에 나타낸다.
 
   $scope.edit = function(){ //게시글 작성은 modal창을 이용.
     if ($scope.modal) {
@@ -56,57 +53,46 @@ angular.module('App')
   };
 
   $scope.addBoard = function(){
-    var time = new Date();
     var subject = this.subject;
     var content = this.content;
 
-    Chats.setBoardLength($stateParams.chatId);
-    var file = $scope.uploadFile;
-
-    $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")
-      .then(function (success) {
-        // success
-        var tmp = JSON.parse(success);
-        var token = tmp.token;
-
-        $http({
-          method: 'POST' ,
-          url: 'http://192.168.0.4:8080/addBoard',
-          data: {
-            pid: getRoomId.get(),
-            subject: subject,
-            content: content,
-            time: time,
-            name: getMyInfo.get(),
-            token: token
-          },
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }).success(function(result) {
-          Boards.unshift(result, time, subject, content, getMyInfo.get(), 0, []);
-          $scope.boards = Boards.all();
-          $scope.hideModal();
-        })
+    $http({
+      method: 'POST' ,
+      url: HttpServ.url+'/addBoard',
+      data: {
+        pid: PresentPid.get(),
+        subject: subject,
+        content: content,
+        id: MyInfo.getMyId(),
+        name: MyInfo.getMyName()
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+      }).success(function(result) {
+        
       })
+      this.subject = ' ';
+      this.content = ' ';
+      $scope.hideModal();
     }
   }
 )
 
-.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicHistory, $ionicNavBarDelegate, $http, Boards, getRoomId, $cordovaFile, getMyInfo, $timeout) {
+.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicHistory, $ionicNavBarDelegate, $http, Board, PresentPid, $cordovaFile, MyInfo, $timeout) {
   $timeout(function(){  //뷰에 증가된 조회수를 나타내기 위해 timeout서비스를 이용.
-    Boards.setHits($stateParams.boardId);
+    Board.setHits($stateParams.boardId);
   },500);
 
   $ionicNavBarDelegate.showBackButton(true);
-  $scope.board = Boards.get($stateParams.boardId);
+  $scope.board = Board.get($stateParams.pid);
   $scope.comments = $scope.board.comments;
 
   $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/setHits',
+    url: HttpServ.url+'/setHits',
     data: {
-      pid: getRoomId.get(),
+      pid: PresentPid.get(),
       title: $stateParams.boardId
     },
     headers: {
@@ -117,46 +103,38 @@ angular.module('App')
   })
 
   $scope.deleteDetail = function(){
-    $cordovaFile.readAsText(cordova.file.dataDirectory, "myInfo.json")
-      .then(function (success) {
-        // success
-        var tmp = JSON.parse(success);
-        var token = tmp.token;
-
-        $http({
-          method: 'POST' ,
-          url: 'http://192.168.0.4:8080/deleteDetail',
-          data: {
-            pid: getRoomId.get(),
-            title: $stateParams.boardId,
-            token: token
-          },
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }).success(function(result) {
-          if (result=='complete') {
-            Boards.removeBoard($stateParams.boardId);
-            var start = parseInt($stateParams.boardId)+1;
-            Boards.change(start);
-            $ionicHistory.goBack();
-          }
-        })
+    $http({
+      method: 'POST' ,
+      url: HttpServ.url+'/deleteDetail',
+      data: {
+        pid: PresentPid.get(),
+        title: $stateParams.boardId,
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).success(function(result) {
+      if (result=='complete') {
+        Board.removeBoard($stateParams.boardId);
+        var start = parseInt($stateParams.boardId)+1;
+        Board.change(start);
+        $ionicHistory.goBack();
+      }
     })
   }
 
   $scope.addComment = function(){
     $scope.comment = this.comment;
-    $scope.comments.push({name:getMyInfo.get(), comment:$scope.comment});
+    $scope.comments.push({name:MyInfo.getMyName(), comment:$scope.comment});
     var boardId = $stateParams.boardId;
 
     $http({
       method: 'POST' ,
-      url: 'http://192.168.0.4:8080/setComments',
+      url: HttpServ.url+'/setComments',
       data: {
-        pid: getRoomId.get(),
+        pid: PresentPid.get(),
         title: $stateParams.boardId,
-        name: getMyInfo.get(),
+        name: MyInfo.getMyName(),
         content: $scope.comment
       },
       headers: {
@@ -165,7 +143,6 @@ angular.module('App')
     }).success(function(result) {
 
     })
-
     this.comment = ' ';
   }
 });

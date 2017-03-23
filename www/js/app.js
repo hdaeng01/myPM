@@ -11,7 +11,7 @@ angular.module('App.factories', ['ngResource']);
 angular.module('App.directives', ['App.constants', 'App.services', 'ionic']);
 angular.module('App.services', ['App.constants', 'App.factories']);
 angular.module('App.controllers', ['App.services', 'ionic']);
-angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth', 'ion-floating-menu', 'ionic.cloud', 'App.controllers', 'App.services', 'App.constants', 'App.directives'])
+angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth', 'ngStorage', 'ion-floating-menu', 'ionic.cloud', 'App.controllers', 'App.services', 'App.constants', 'App.directives'])
 
 .run(function($ionicPlatform) {
 
@@ -28,6 +28,7 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicCloudProvider) {
+
   $ionicCloudProvider.init({
     "core": {
       "app_id": "4c9ab9c0"
@@ -56,7 +57,7 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
     })
     .state('tabs.board', {
       cache: false,
-      url: '/board/:chatId',
+      url: '/board/:pid',
       views: {
         'tab-board': {
           templateUrl: 'views/board/board.html',
@@ -75,7 +76,7 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
       }
     })
     .state('tabs.chats', {
-      url: '/chats/:chatId',
+      url: '/chats/:pid',
       views: {
         'tab-chats': {
           templateUrl: 'views/chats/tab-chats.html',
@@ -84,7 +85,7 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
       }
     })
     .state('tabs.schedule', {
-      url: '/schedule/:chatId',
+      url: '/schedule/:pid',
       views: {
         'tab-schedule': {
           templateUrl: 'views/schedule/tab-schedule.html'

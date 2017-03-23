@@ -1,5 +1,9 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, getMyInfo, $cordovaOauth, $ionicPush, push) {
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, $cordovaOauth, $ionicPush, push, StorageService, HttpServ) {
+  if (StorageService.get()!=null) {
+    $state.go("main");
+  }
+
   var token;
   $ionicPush.register().then(function(t) {  //처음 앱이 시작되면 해당 핸드폰을 구별하는 token이 생성된다.
     return $ionicPush.saveToken(t);
@@ -36,11 +40,12 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
+    url: HttpServ.url+'/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
     data: {
         email: $scope.regiEmail,
         password: $scope.regiPass,
-        displayname: $scope.regiName
+        displayname: $scope.regiName,
+        token: token
     },
     headers: {
         'Content-Type': 'application/json'
@@ -64,7 +69,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: 'http://192.168.0.4:8080/auth/login/', //로그인시 정보를 서버에 보내 확인.
+    url: HttpServ.url+'/auth/login/', //로그인시 정보를 서버에 보내 확인.
     data: {
       username: $scope.username,
       password: $scope.password
@@ -76,20 +81,8 @@ angular.module('App')
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
       } else {  //로그인이 정보를 확인했으면 자신의 핸드폰에 아이디 가입경로, 아이디, 이름, 토큰을 파일로 저장한다.
-        var data = {
-          route : 'local',
-          id : $scope.username,
-          username : response,
-          token : token
-        };
-
-        $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.json", JSON.stringify(data), true)
-          .then(function (success) {
-            // success
-            $state.go("main");  //저장 후 main 페이지로 이동
-          }, function (error) {
-            // error
-          });
+        StorageService.add($scope.username);
+        $state.go("main");
       }
     });
   }
