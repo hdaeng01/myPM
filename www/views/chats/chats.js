@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $cordovaFile, Projects, MySocket, MyInfo, PresentPid) {
+.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid) {
   $scope.messages = [];
   $scope.myId = MyInfo.getMyId();
   PresentPid.set($stateParams.pid);
@@ -20,9 +20,8 @@ angular.module('App')
     $scope.messages.push(message);
   });
 
-
   MySocket.on('chatMessage', function(message){
-    console.log('message : '+message.id);
+    console.log('message : '+message[0].id+' '+message[0].content);
     $scope.messages.push(message);
     $ionicScrollDelegate.resize();
     $ionicScrollDelegate.scrollBottom();

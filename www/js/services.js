@@ -1,6 +1,6 @@
 angular.module('App.factories',[])
 
-.factory('Projects', function() {
+.factory('Projects', function() {  //프로젝트들을 채팅방개념으로 인식.
   var projects = [];
   return {
     all: function() {
@@ -117,7 +117,7 @@ angular.module('App.factories',[])
     },
     setId: function(_id){
       id=_id;
-    }
+    },
     getMyName: function(){
       return name;
     },

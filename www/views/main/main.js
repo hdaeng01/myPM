@@ -4,7 +4,7 @@ angular.module('App')
   $ionicNavBarDelegate.showBackButton(false);
   MyInfo.setId(StorageService.get());
 
-  $ionicPush.register().then(function(t) {  //처음 앱이 시작되면 해당 핸드폰을 구별하는 token이 생성된다.
+  $ionicPush.register().then(function(t) {
     return $ionicPush.saveToken(t);
   }).then(function(t) {
     $http({

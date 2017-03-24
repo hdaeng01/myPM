@@ -1,14 +1,14 @@
 angular.module('App')
-.controller('LoginCtrl',function($scope, $http, $stateParams, $ionicModal, $state, HttpServ, StorageService) {
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ) {
   if (StorageService.get()!=null) {
     $state.go("main");
   }
 
-  $scope.showModal = function(){
+  $scope.showModal = function(){ 
     if ($scope.modal) {
       $scope.modal.show();
     } else {
-      $ionicModal.fromTemplateUrl('views/login/modal-register.html',{ //modal view의 위치.
+      $ionicModal.fromTemplateUrl('views/login/modal-register.html',{
         scope:$scope
       }).then(function(modal){
         $scope.modal = modal;
@@ -31,16 +31,16 @@ angular.module('App')
     $scope.regiName = this.regiName;
 
     $http({
-      method:'POST',
-      url: HttpServ.url+'/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
-      data: {
-          email: $scope.regiEmail,
-          password: $scope.regiPass,
-          displayname: $scope.regiName
-      },
-      headers: {
-          'Content-Type': 'application/json'
-      }
+    method: 'POST' ,
+    url: HttpServ.url+'/auth/register/',
+    data: {
+        email: $scope.regiEmail,
+        password: $scope.regiPass,
+        displayname: $scope.regiName
+    },
+    headers: {
+        'Content-Type': 'application/json'
+    }
     }).success(function(response) {
       if (response == 'welcome') {
         console.log('Success');
@@ -59,15 +59,15 @@ angular.module('App')
     $scope.password = this.password;
 
     $http({
-      method:'POST',
-      url: HttpServ.url+'/auth/login/',
-      data: {
-        username: $scope.username,
-        password: $scope.password
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    method: 'POST' ,
+    url: HttpServ.url+'/auth/login/',
+    data: {
+      username: $scope.username,
+      password: $scope.password
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    }
     }).success(function(response) {
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
