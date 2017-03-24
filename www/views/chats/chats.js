@@ -16,12 +16,16 @@ angular.module('App')
     headers: {
       'Content-Type': 'application/json'
     }
-  }).success(function(message) {
-    $scope.messages.push(message);
+  }).success(function(messages) {
+    for (var i = 0; i < messages.length; i++) {
+      $scope.messages.unshift(messages[i]);
+    }
+    $ionicScrollDelegate.resize();
+    $ionicScrollDelegate.scrollBottom();
   });
 
   MySocket.on('chatMessage', function(message){
-    console.log('message : '+message[0].id+' '+message[0].content);
+    console.log('message : '+message.id+' '+message.content);
     $scope.messages.push(message);
     $ionicScrollDelegate.resize();
     $ionicScrollDelegate.scrollBottom();
@@ -43,7 +47,8 @@ angular.module('App')
 
     message = {
       sender: MyInfo.getMyName(),
-      uid: MyInfo.getMyId(),
+      id: MyInfo.getMyId(),
+      created: new Date(),
       content: msgText
     };
 

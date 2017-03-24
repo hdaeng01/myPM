@@ -12,9 +12,9 @@
   <ion-content class="padding content-stable" on-swipe-left="hideTime = false" on-swipe-right="hideTime = true">
     <ion-scroll>
       <div class="chatContent">
-        <div ng-repeat="m in messages" ng-class="{'other': m.uid == myId}"  class="messages">
+        <div ng-repeat="m in messages" ng-class="{'other': m.id == myId}" class="messages">
           <div class="messagee" ng-class="{'slide-right': hideTime}">
-            <div ng-if="m.uid!=myId">{{m.sender}}</div>
+            <div ng-if="m.id!=myId">{{m.sender}}</div>
             <span> {{m.content}} </span>
             <p>{{m.created}}</p>
           </div>
