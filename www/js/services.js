@@ -1,6 +1,6 @@
 angular.module('App.factories',[])
 
-.factory('Projects', function() {  //프로젝트들을 채팅방개념으로 인식.
+.factory('Projects', function() {
   var projects = [];
   return {
     all: function() {
@@ -29,7 +29,7 @@ angular.module('App.factories',[])
   }
 })
 
-.factory('mySocket', function (socketFactory, HttpServ) {
+.factory('MySocket', function (socketFactory, HttpServ) {
   var myIoSocket = io.connect(HttpServ.url);
 
   mySocket = socketFactory({
@@ -53,60 +53,54 @@ angular.module('App.factories',[])
 })
 
 .factory('Board', function() {
-  var boards = [];
+  var board = [];
 
   return {
     all: function() {
-      return boards;
+      return board;
     },
     remove: function(chat) {
-      boards.splice(boards.indexOf(chat), 1);
+      board.splice(board.indexOf(chat), 1);
     },
     get: function(boardId) {
-      for (var i = 0; i < boards.length; i++) {
-        if (boards[i].id == parseInt(boardId)) {
-          return boards[i];
+      for (var i = 0; i < board.length; i++) {
+        if (board[i].id == parseInt(boardId)) {
+          return board[i];
         }
       }
       return null;
     },
     getLength: function(){
-      return boards.length;
+      return board.length;
     },
-    set: function(_id, _time, _title, _content, _name, _hits, _comments){
-      boards.push({id:_id, name:_name, title:_title, content:_content, time:_time, hits:_hits, comments:_comments});
+    getLastId: function(){
+      return board[board.length-1].id;
     },
-    unshift: function(_id, _time, _title, _content, _name, _hits, _comments){
-      boards.unshift({id:_id, name:_name, title:_title, content:_content, time:_time, hits:_hits, comments:_comments});
+    set: function(_id, _time, _title, _name, _hits, _comments){
+      board.push({id:_id, name:_name, title:_title, time:_time, hits:_hits, comments:_comments});
+    },
+    unshift: function(_id, _time, _title, _name, _hits, _comments){
+      board.unshift({id:_id, name:_name, title:_title, time:_time, hits:_hits, comments:_comments});
     },
     setEmpty: function(){
-      boards = [];
+      board = [];
       console.log('게시판 지움');
     },
     removeBoard: function(boardId) {
-      for (var i = 0; i < boards.length; i++) {
-        if (boards[i].id == parseInt(boardId)) {
-          boards.splice(boards.indexOf(boards[i]), 1);
+      for (var i = 0; i < board.length; i++) {
+        if (board[i].id == parseInt(boardId)) {
+          board.splice(board.indexOf(board[i]), 1);
           break;
         }
       }
     },
     setHits: function(id){
-      for (var i = 0; i < boards.length; i++) {
-        if (boards[i].id == id) {
-          var tmp = parseInt(boards[i].hits);
+      for (var i = 0; i < board.length; i++) {
+        if (board[i].id == id) {
+          var tmp = parseInt(board[i].hits);
           tmp = (++tmp).toString();
-          boards[i].hits = tmp;
+          board[i].hits = tmp;
           break;
-        }
-      }
-    },
-    change: function(id){
-      for (var i = boards.length-1; i > -1; i--) {
-        if (boards[i].id==id) {
-            var tmp = parseInt(boards[i].id)-1;
-            boards[i].id = tmp;
-            id++;
         }
       }
     }
@@ -118,12 +112,12 @@ angular.module('App.factories',[])
   var id;
 
   return {
-    addName: function(_name){
+    setName: function(_name){
       name=_name;
     },
-    addId: function(_id){
+    setId: function(_id){
       id=_id;
-    },
+    }
     getMyName: function(){
       return name;
     },
@@ -164,7 +158,7 @@ angular.module('App.factories',[])
   });
   var _get = function () {
     return $localStorage.things[0];
-  };
+  }
   var _add = function (thing) {
     $localStorage.things.push(thing);
   }
@@ -175,7 +169,7 @@ angular.module('App.factories',[])
       get: _get,
       add: _add,
       remove: _remove
-    };
+    }
 })
 
 .directive('focusMe',['$timeout',function ($timeout) {

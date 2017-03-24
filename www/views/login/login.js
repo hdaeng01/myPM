@@ -1,18 +1,10 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $location, $state, $cordovaFile, $cordovaOauth, $ionicPush, push, StorageService, HttpServ) {
+.controller('LoginCtrl',function($scope, $http, $stateParams, $ionicModal, $state, HttpServ, StorageService) {
   if (StorageService.get()!=null) {
     $state.go("main");
   }
 
-  var token;
-  $ionicPush.register().then(function(t) {  //처음 앱이 시작되면 해당 핸드폰을 구별하는 token이 생성된다.
-    return $ionicPush.saveToken(t);
-  }).then(function(t) {
-    token = t.token;
-    console.log('Token saved:'+ t.token);
-  });
-
-  $scope.showModal = function(){  // 회원가입을 할 때는 modal창을 띄워 진행.
+  $scope.showModal = function(){
     if ($scope.modal) {
       $scope.modal.show();
     } else {
@@ -39,17 +31,16 @@ angular.module('App')
     $scope.regiName = this.regiName;
 
     $http({
-    method: 'POST' ,
-    url: HttpServ.url+'/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
-    data: {
-        email: $scope.regiEmail,
-        password: $scope.regiPass,
-        displayname: $scope.regiName,
-        token: token
-    },
-    headers: {
-        'Content-Type': 'application/json'
-    }
+      method:'POST',
+      url: HttpServ.url+'/auth/register/', //회원가입시 적은 내용을 서버에 보낸다.
+      data: {
+          email: $scope.regiEmail,
+          password: $scope.regiPass,
+          displayname: $scope.regiName
+      },
+      headers: {
+          'Content-Type': 'application/json'
+      }
     }).success(function(response) {
       if (response == 'welcome') {
         console.log('Success');
@@ -68,69 +59,22 @@ angular.module('App')
     $scope.password = this.password;
 
     $http({
-    method: 'POST' ,
-    url: HttpServ.url+'/auth/login/', //로그인시 정보를 서버에 보내 확인.
-    data: {
-      username: $scope.username,
-      password: $scope.password
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    }
+      method:'POST',
+      url: HttpServ.url+'/auth/login/',
+      data: {
+        username: $scope.username,
+        password: $scope.password
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }).success(function(response) {
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
-      } else {  //로그인이 정보를 확인했으면 자신의 핸드폰에 아이디 가입경로, 아이디, 이름, 토큰을 파일로 저장한다.
+      } else {
         StorageService.add($scope.username);
         $state.go("main");
       }
-    });
-  }
-
-  $scope.logFacebook = function() { //페이스북 auth로그인. $cordovaOauth서비스 이용
-    $cordovaOauth.facebook("1165650960200214", ["email", "user_relationships"]) //페이스북 개발자 앱에 등록된 앱 아이디.
-      .then(function(result) {
-        // results
-        $http.get("https://graph.facebook.com/v2.2/me",
-        {
-          params:
-          {
-            access_token: result.access_token,
-            fields: "id,name,gender,location,website,picture,relationship_status,email",  //이런한 것들을 페이스북에 요청.
-            format: "json"
-          }
-        })
-        .then(function(res) {
-	                $scope.profileData = res.data; //요청받은 것을 저장.
-                  var data = {
-                    route : 'facebook',
-                    id : $scope.profileData.email,
-                    username : $scope.profileData.name,
-                    picture : $scope.profileData.picture,
-                    token: token
-                  }
-                  $cordovaFile.writeFile(cordova.file.dataDirectory, "myInfo.json", JSON.stringify(data), true)
-                    .then(function (success) {
-                      // success
-                      $state.go("main");
-                    }, function (error) {
-                      // error
-                    });
-	            }, function(error) {
-	                alert("There was a problem getting your profile.  Check the logs for details.");
-	                console.log(error);
-	            });
-      }, function(error) {
-        // error
-      });
-  }
-
-
-  $scope.logGoogle = function(){
-    $cordovaOauth.google("1074251742453-48vvrjk8u4jfegfkl2gsfnird3ofrvj4.apps.googleusercontent.com", ["email"]).then(function(result) {
-        console.log("Response Object -> " + JSON.stringify(result));
-    }, function(error) {
-        console.log("Error -> " + error);
     });
   }
 })

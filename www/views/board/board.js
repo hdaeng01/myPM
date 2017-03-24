@@ -1,39 +1,38 @@
 angular.module('App')
-.controller('BoardCtrl', function($scope, $state, $stateParams, $ionicModal, $http, Projects, Board, $ionicNavBarDelegate, PresentPid, MyInfo, $cordovaFile, HttpServ) {
-  $scope.project = Projects.get($stateParams.pid);
-  // $scope.board = Boards.get($stateParams.pid);
+.controller('BoardCtrl', function($scope, $state, $stateParams, $ionicModal, $http, $ionicNavBarDelegate, Projects, Board, PresentPid, MyInfo, HttpServ) {
   $scope.page = 0;
   $scope.total = 1;
+  $scope.project = Projects.get($stateParams.pid);
+  $scope.board = Board.all(); //처음에 Board서비스에 저장된 게시들을 불러와 뷰에 나타낸다.
   $scope.projectInfo = function(){
     $state.go('info');
   }
 
   $scope.getPage = function(){  //게시판 글 10개를 넘어가면 다음 10개를 서버에서 불러온다. ion-infinite-scroll를 이용해 무한 스크롤로 로딩.
     $scope.page++;
-
     $http({
       method: 'POST' ,
-      url: HttpServ.url+'/getPage',
+      url: HttpServ.url+'/getNextPage',
       data: {
         pid: PresentPid.get(),
-        page: $scope.page
+        bid: Board.getLastId()
       },
       headers: {
         'Content-Type': 'application/json'
       }
     }).success(function(result) {
-      for(var i = 0; i<result.board.length; i++){
-        Board.set(result.board[i].id, result.board[i].time, result.board[i].subject, result.board[i].content, result.board[i].name, result.board[i].hits, result.board[i].comments);
+      var board = result.board;
+      for(var i = 0; i<board.length; i++){
+        Board.set(board[i].id, board[i].time, board[i].subject, board[i].name, board[i].hits);
       };
-      $scope.total = result.totalPages;
+      $scope.total = result.totalPage;
+      $scope.board = Board.all();
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }).error(function(err){
       $scope.$broadcast('scroll.infiniteScrollComplete');
       console.log(err);
     });
   }
-
-  $scope.board = Board.all(); //처음에 Board서비스에 저장된 게시들을 불러와 뷰에 나타낸다.
 
   $scope.edit = function(){ //게시글 작성은 modal창을 이용.
     if ($scope.modal) {
@@ -70,7 +69,11 @@ angular.module('App')
         'Content-Type': 'application/json'
       }
       }).success(function(result) {
-        
+        var board = result;
+        for (var i = 0; i < board.length; i++) {
+          Board.unshift(board[i].id, board[i].time, board[i].subject, board[i].name, board[i].hits, board[i].comments);
+        }
+        $scope.board = Board.all();
       })
       this.subject = ' ';
       this.content = ' ';
@@ -79,70 +82,66 @@ angular.module('App')
   }
 )
 
-.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicHistory, $ionicNavBarDelegate, $http, Board, PresentPid, $cordovaFile, MyInfo, $timeout) {
-  $timeout(function(){  //뷰에 증가된 조회수를 나타내기 위해 timeout서비스를 이용.
-    Board.setHits($stateParams.boardId);
-  },500);
-
+.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicHistory, $ionicNavBarDelegate, $http, $timeout, Projects, Board, PresentPid, MyInfo, HttpServ) {
   $ionicNavBarDelegate.showBackButton(true);
-  $scope.board = Board.get($stateParams.pid);
-  $scope.comments = $scope.board.comments;
+  Board.setHits($stateParams.boardId);
+  $scope.board = Board.get($stateParams.boardId);
+  $scope.project = Projects.get(PresentPid.get());
+  $scope.comments = [];
 
   $http({
     method: 'POST' ,
-    url: HttpServ.url+'/setHits',
+    url: HttpServ.url+'/boardDetail',
     data: {
-      pid: PresentPid.get(),
-      title: $stateParams.boardId
+      bid: $stateParams.boardId
     },
     headers: {
       'Content-Type': 'application/json'
     }
   }).success(function(result) {
-
+    $scope.content = result.content;
+    angular.forEach(result.comments, function(comment){
+      $scope.comments.push(comment);
+    })
   })
+
+  $scope.addComment = function(){
+    $scope.comment = this.comment;
+    $http({
+      method: 'POST' ,
+      url: HttpServ.url+'/addComment',
+      data: {
+        bid: $stateParams.boardId,
+        id: MyInfo.getMyId(),
+        content: $scope.comment
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).success(function(comments) {
+      angular.forEach(comments, function(comment){
+        $scope.comments.push(comment);
+      })
+    })
+    this.comment = ' ';
+  }
 
   $scope.deleteDetail = function(){
     $http({
       method: 'POST' ,
       url: HttpServ.url+'/deleteDetail',
       data: {
-        pid: PresentPid.get(),
-        title: $stateParams.boardId,
+        id: MyInfo.getMyId(),
+        bid: $stateParams.boardId
       },
       headers: {
         'Content-Type': 'application/json'
       }
     }).success(function(result) {
-      if (result=='complete') {
+      if (result=='삭제완료') {
         Board.removeBoard($stateParams.boardId);
-        var start = parseInt($stateParams.boardId)+1;
-        Board.change(start);
         $ionicHistory.goBack();
       }
     })
-  }
-
-  $scope.addComment = function(){
-    $scope.comment = this.comment;
-    $scope.comments.push({name:MyInfo.getMyName(), comment:$scope.comment});
-    var boardId = $stateParams.boardId;
-
-    $http({
-      method: 'POST' ,
-      url: HttpServ.url+'/setComments',
-      data: {
-        pid: PresentPid.get(),
-        title: $stateParams.boardId,
-        name: MyInfo.getMyName(),
-        content: $scope.comment
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).success(function(result) {
-
-    })
-    this.comment = ' ';
   }
 });

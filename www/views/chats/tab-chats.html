@@ -1,4 +1,4 @@
-<ion-view view-title="{{chatRoom.name}}">
+<ion-view view-title="{{project.pname}}">
   <ion-nav-buttons side="right">
     <button class="button button-clear" ng-click="">
       <span class="icon ion-ios-information-outline"></span>
@@ -15,7 +15,8 @@
         <div ng-repeat="m in messages" ng-class="{'other': m.uid == myId}"  class="messages">
           <div class="messagee" ng-class="{'slide-right': hideTime}">
             <div ng-if="m.uid!=myId">{{m.sender}}</div>
-            <span> {{m.chatContent}} </span>
+            <span> {{m.content}} </span>
+            <p>{{m.created}}</p>
           </div>
         </div>
       </div>

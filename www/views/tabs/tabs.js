@@ -3,11 +3,10 @@ angular.module('App')
   $rootScope.$on('cloud:push:notification', function(event, data) {
     var msg = data.message;
     var str = msg.text.split(' ');
-    if(str[3]=='게시물이'){ //프로젝트 이름에 빈칸은 들어갈 수 없다.!!
+    if(str[3]=='게시물이'){
       var pid = str[0].substring(str[0].length-9,str[0].length-1);
       PresentPid.set(pid);
       Board.setEmpty();
-
       $http({
         method: 'POST' ,
         url: HttpServ.url+'/getBoard',
@@ -18,14 +17,11 @@ angular.module('App')
           'Content-Type': 'application/json'
         }
       }).success(function(result) {
-        var board = result.board;
-        for (var i = 0; i < parseInt(result.boardLength); i++) {
-          Board.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits);
-          console.log(board[i].id);
+        var board = result;
+        for (var i = 0; i < board.length; i++) {
+          Board.set(board[i].id, board[i].time, board[i].subject, board[i].name, board[i].hits, board[i].comments);
         }
-        $scope.$watch('Board', function(newValue, oldValue){
-           $state.go('tabs.board',{pid:pid});
-        }, true);
+        $state.go('tabs.board',{pid:pid});
       });
     } else{
       var pid = str[0].substring(str[0].length-9,str[0].length-1);

@@ -1,25 +1,30 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, Projects, $state, PresentPid, $ionicNavBarDelegate, $http, MyInfo, $cordovaFile, Board, $timeout, $ionicPush, push, $ionicHistory, HttpServ, StorageService) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, $state, $ionicPush, $ionicNavBarDelegate, $ionicHistory, $http, Projects, PresentPid, MyInfo, Board, push, HttpServ, StorageService) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
-  MyInfo.addId(StorageService.get());
+  MyInfo.setId(StorageService.get());
 
-  $http({
-    method: 'POST' ,
-    url: HttpServ.url+'/getMyInfo',
-    data: {
-      id: MyInfo.getMyId()
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).success(function(info) {
-    MyInfo.addName(info.name);
-
-    for (var i = 0; i < info.projects.length; i++) {
-      Projects.add(info.projects[i].pid, info.projects[i].pname);
-    }
-  })
+  $ionicPush.register().then(function(t) {  //처음 앱이 시작되면 해당 핸드폰을 구별하는 token이 생성된다.
+    return $ionicPush.saveToken(t);
+  }).then(function(t) {
+    $http({
+      method: 'POST' ,
+      url: HttpServ.url+'/getMyInfo',
+      data: {
+        id: MyInfo.getMyId(),
+        token: t.token
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).success(function(info) {
+      MyInfo.setName(info.name);
+      for (var i = 0; i < info.projects.length; i++) {
+        Projects.add(info.projects[i].pid, info.projects[i].pname);
+      }
+    })
+    console.log('Token saved:'+ t.token);
+  });
 
   $scope.showModal = function(){
     if ($scope.modal) {
@@ -104,7 +109,7 @@ angular.module('App')
     }).success(function(result) {
       var board = result;
       for (var i = 0; i < board.length; i++) {
-        Board.set(board[i].id, board[i].time, board[i].subject, board[i].content, board[i].name, board[i].hits, board[i].comments);
+        Board.set(board[i].id, board[i].time, board[i].subject, board[i].name, board[i].hits, board[i].comments);
       }
       $state.go('tabs.board',{pid:pid});
     });

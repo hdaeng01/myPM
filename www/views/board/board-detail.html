@@ -11,7 +11,7 @@
 
       <div class="item item-divider">내용</div>
       <ion-item>
-        <h3>{{board.content}}</h3>
+        <h3>{{content}}</h3>
       </ion-item>
 
       <div class="item item-divider">댓글</div>
@@ -21,8 +21,9 @@
       </ion-item>
 
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="comment in comments" type="item-text-wrap">
-        <h3>{{comment.name}}</h3>
-        <p>{{comment.comment}}</p>
+        <h3>{{comment.name}}({{comment.id}})</h3>
+        <h4>{{comment.cdate}}</h4>
+        <p>{{comment.content}}</p>
       </ion-item>
     </ion-list>
   </ion-content>
