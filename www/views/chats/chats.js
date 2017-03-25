@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $state, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid) {
+.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $state, $timeout, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid) {
   $scope.messages = [];
   $scope.myId = MyInfo.getMyId();
   PresentPid.set($stateParams.pid);
@@ -7,39 +7,56 @@ angular.module('App')
   MySocket.emit('joinRoom',PresentPid.get());
   $scope.hideTime = true;
   $scope.page = 0;
-  $scope.total = 1;
 
   $scope.projectInfo = function(){
     $state.go('info',{pid:$stateParams.pid});
   }
 
-  $scope.getMoreMessage = function(){  //게시판 글 10개를 넘어가면 다음 10개를 서버에서 불러온다. ion-infinite-scroll를 이용해 무한 스크롤로 로딩.
-    $scope.page++;
-    var message = {
-      id: MyInfo.getMyId(),
-      pid: PresentPid.get(),
-      sender: MyInfo.getMyName(),
-      content: 'test!!'
-    };
-    $scope.messages.unshift(message);
-  }
+  $scope.getChat = function(){  //게시판 글 10개를 넘어가면 다음 10개를 서버에서 불러온다. ion-infinite-scroll를 이용해 무한 스크롤로 로딩.
+    console.log('id : '+MyInfo.getMyId());
+    $http({
+      method: 'POST' ,
+      url: HttpServ.url+'/getChat',
+      data: {
+        id: MyInfo.getMyId(),
+        pid: PresentPid.get(),
+        page: $scope.page
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).success(function(messages) {
+      for (var i = 0; i < messages.length; i++) {
+        $scope.messages.unshift(messages[i]);
+      }
+      // $ionicScrollDelegate.resize();
 
-  $http({
-    method: 'POST' ,
-    url: HttpServ.url+'/getChat',
-    data: {
-      pid: PresentPid.get()
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).success(function(messages) {
-    for (var i = 0; i < messages.length; i++) {
-      $scope.messages.unshift(messages[i]);
-    }
-    $ionicScrollDelegate.resize();
-    $ionicScrollDelegate.scrollBottom();
-  });
+      if ($scope.page==0) {
+        $scope.page++;
+        $ionicScrollDelegate.scrollBottom();
+      }
+
+    }).finally(function(){
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+  }
+  $scope.getChat();
+  // $http({
+  //   method: 'POST' ,
+  //   url: HttpServ.url+'/getChat',
+  //   data: {
+  //     pid: PresentPid.get()
+  //   },
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   }
+  // }).success(function(messages) {
+  //   for (var i = 0; i < messages.length; i++) {
+  //     $scope.messages.unshift(messages[i]);
+  //   }
+  //   $ionicScrollDelegate.resize();
+  //   $ionicScrollDelegate.scrollBottom();
+  // });
 
   MySocket.on('chatMessage', function(message){
     console.log('message : '+message.id+' '+message.content);

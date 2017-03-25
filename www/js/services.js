@@ -109,6 +109,7 @@ angular.module('App.factories',[])
 .factory('MyInfo', function() {
   var name;
   var id;
+  var token;
 
   return {
     setName: function(_name){
@@ -117,11 +118,17 @@ angular.module('App.factories',[])
     setId: function(_id){
       id=_id;
     },
+    setToken: function(_token){
+      token=_token;
+    },
     getMyName: function(){
       return name;
     },
     getMyId: function(){
       return id;
+    },
+    getMyToken: function(){
+      return token;
     }
   }
 })
