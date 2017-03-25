@@ -84,7 +84,6 @@ angular.module('App.factories',[])
     },
     setEmpty: function(){
       board = [];
-      console.log('게시판 지움');
     },
     removeBoard: function(boardId) {
       for (var i = 0; i < board.length; i++) {
@@ -159,16 +158,23 @@ angular.module('App.factories',[])
   var _get = function () {
     return $localStorage.things[0];
   }
-  var _add = function (thing) {
+  var _set = function (thing) {
     $localStorage.things.push(thing);
   }
   var _remove = function (thing) {
     $localStorage.things.splice($localStorage.things.indexOf(thing), 1);
   }
+  var _removeAll = function (thing) {
+    for (var i = 0; i < $localStorage.things.length; i++) {
+      $localStorage.things.pop();
+    }
+
+  }
   return {
       get: _get,
-      add: _add,
-      remove: _remove
+      set: _set,
+      remove: _remove,
+      removeAll: _removeAll
     }
 })
 

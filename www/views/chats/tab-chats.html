@@ -1,6 +1,6 @@
 <ion-view view-title="{{project.pname}}">
   <ion-nav-buttons side="right">
-    <button class="button button-clear" ng-click="">
+    <button class="button button-clear" ng-click="projectInfo()">
       <span class="icon ion-ios-information-outline"></span>
     </button>
   </ion-nav-buttons>
@@ -10,8 +10,9 @@
     </button>
   </ion-nav-back-buttons>
   <ion-content class="padding content-stable" on-swipe-left="hideTime = false" on-swipe-right="hideTime = true">
-    <ion-scroll>
+    <ion-scroll>  <!--채팅 글 무한스크롤링하기.--> <!--css 문제 아직 남아있음-->
       <div class="chatContent">
+        <ion-infinite-scroll on-infinite="getMoreMessage()" ng-if="total>page" immediate-check="false"></ion-infinite-scroll>
         <div ng-repeat="m in messages" ng-class="{'other': m.id == myId}" class="messages">
           <div class="messagee" ng-class="{'slide-right': hideTime}">
             <div ng-if="m.id!=myId">{{m.sender}}</div>

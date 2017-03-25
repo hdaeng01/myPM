@@ -1,5 +1,5 @@
 (function(){
-  angular.module('App.controllers').controller('infoCtrl', ['$scope', 'projectServ', infoCtrl]);
+  angular.module('App.controllers').controller('infoCtrl', ['$scope', '$ionicNavBarDelegate', '$ionicHistory', 'projectServ', infoCtrl]);
 
   function infoCtrl($scope, projectServ){
     console.log("vvvvvvvvvvvv");

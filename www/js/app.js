@@ -92,6 +92,15 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
         }
       }
     })
+    .state('tabs.info', {
+      url: '/info/:pid',
+      views: {
+        'tab-info': {
+          templateUrl: 'views/info/tab-info.html',
+          controller: 'infoCtrl'
+        }
+      }
+    })
     .state('main', {
       url: '/main',
       templateUrl: 'views/main/main.html',
@@ -108,7 +117,7 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
       controller: 'SearchCtrl'
     })
     .state('info', {
-      url : '/info',
+      url : '/info/:pid',
       templateUrl : 'views/info/tab-info.html',
       controller: 'infoCtrl'
     })

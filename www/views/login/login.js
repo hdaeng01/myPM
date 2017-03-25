@@ -1,10 +1,11 @@
 angular.module('App')
 .controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ) {
+  // StorageService.removeAll();
   if (StorageService.get()!=null) {
     $state.go("main");
   }
 
-  $scope.showModal = function(){ 
+  $scope.showModal = function(){
     if ($scope.modal) {
       $scope.modal.show();
     } else {
@@ -21,9 +22,9 @@ angular.module('App')
     $scope.modal.hide();
   };
 
-  $scope.$on('$destroy', function(){
-    $scope.modal.remove();
-  });
+  // $scope.$on('$destroy', function(){
+  //   $scope.modal.remove();
+  // });
 
   $scope.createAccount = function(){
     $scope.regiEmail = this.regiEmail;
@@ -60,7 +61,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: HttpServ.url+'/auth/login/',
+    url: HttpServ.url+'/auth/login',
     data: {
       username: $scope.username,
       password: $scope.password
@@ -72,7 +73,7 @@ angular.module('App')
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
       } else {
-        StorageService.add($scope.username);
+        StorageService.set($scope.username);
         $state.go("main");
       }
     });

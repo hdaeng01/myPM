@@ -4,8 +4,9 @@ angular.module('App')
   $scope.total = 1;
   $scope.project = Projects.get($stateParams.pid);
   $scope.board = Board.all(); //처음에 Board서비스에 저장된 게시들을 불러와 뷰에 나타낸다.
+
   $scope.projectInfo = function(){
-    $state.go('info');
+    $state.go('info',{pid:$stateParams.pid});
   }
 
   $scope.getPage = function(){  //게시판 글 10개를 넘어가면 다음 10개를 서버에서 불러온다. ion-infinite-scroll를 이용해 무한 스크롤로 로딩.
@@ -82,7 +83,7 @@ angular.module('App')
   }
 )
 
-.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicHistory, $ionicNavBarDelegate, $http, $timeout, Projects, Board, PresentPid, MyInfo, HttpServ) {
+.controller('BoardDetailCtrl', function($scope, $stateParams, $ionicNavBarDelegate, $http, $timeout, Projects, Board, PresentPid, MyInfo, HttpServ) {
   $ionicNavBarDelegate.showBackButton(true);
   Board.setHits($stateParams.boardId);
   $scope.board = Board.get($stateParams.boardId);

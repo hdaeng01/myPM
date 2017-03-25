@@ -1,7 +1,7 @@
 (function(){
   angular.module('App.services').service('projectServ', projectServ);
 
-  function projectServ($q, $stateParams, $http, getRoomId, Chats){
+  function projectServ($q, $stateParams, $http, PresentPid, Projects, HttpServ){
     this.getProjectInfo = getProjectInfo;
 
     /*
@@ -27,28 +27,26 @@
 
     function getProjectInfo(){
       return $q(function(resolve, reject) {
-        var project_name = Chats.get(getRoomId.get());
-
         $http({
           method: 'POST' ,
-          url: 'http://192.168.1.102:8080/getTeammate',
+          url: HttpServ.url+'/getProjectInfo',
           data: {
-            pid: getRoomId.get()
+            pid: PresentPid.get()
           },
           headers: {
             'Content-Type': 'application/json'
           }
         }).success(function(result) {
           // $scope.members = result.teamMate;
-          var project_name = result.teamMate[0];
-          var project_cdate = result.teamMate[1];
+          var project_name = result.pname;
+          var project_cdate = result.cdate;
           var members = [];
-          for (var i = 2; i < result.teamMate.length; i++) {
-            members.push(result.teamMate[i]);
+          for (var i in result.pmember) {
+            members.push(result.pmember[i][0]);
           }
           var data = {
-            project_name : project_name,
-            project_cdate : project_cdate,
+            project_name : result.pname,
+            project_cdate : result.cdate,
             members : members,
             files : [
               {type : 'image', count : 3},

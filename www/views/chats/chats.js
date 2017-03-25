@@ -1,11 +1,28 @@
 angular.module('App')
-.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid) {
+.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $state, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid) {
   $scope.messages = [];
   $scope.myId = MyInfo.getMyId();
   PresentPid.set($stateParams.pid);
   $scope.project = Projects.get(PresentPid.get());
   MySocket.emit('joinRoom',PresentPid.get());
   $scope.hideTime = true;
+  $scope.page = 0;
+  $scope.total = 1;
+
+  $scope.projectInfo = function(){
+    $state.go('info',{pid:$stateParams.pid});
+  }
+
+  $scope.getMoreMessage = function(){  //게시판 글 10개를 넘어가면 다음 10개를 서버에서 불러온다. ion-infinite-scroll를 이용해 무한 스크롤로 로딩.
+    $scope.page++;
+    var message = {
+      id: MyInfo.getMyId(),
+      pid: PresentPid.get(),
+      sender: MyInfo.getMyName(),
+      content: 'test!!'
+    };
+    $scope.messages.unshift(message);
+  }
 
   $http({
     method: 'POST' ,
