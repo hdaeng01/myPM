@@ -1,6 +1,6 @@
 angular.module('App')
 .controller('LoginCtrl', function($scope, $ionicPush, $ionicAuth, $ionicUser, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ, MyInfo) {
-  // StorageService.removeAll();
+  StorageService.removeAll();
   if (StorageService.get()!=null) {
     $state.go("main");
   }
@@ -68,7 +68,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: HttpServ.url+'/auth/login',
+    url: '/login',
     data: {
       username: $scope.username,
       password: $scope.password,
@@ -81,7 +81,7 @@ angular.module('App')
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
       } else {
-        StorageService.set($scope.username);
+        StorageService.set('local:'+$scope.username);
         $state.go("main");
       }
     });
@@ -109,7 +109,7 @@ angular.module('App')
         'Content-Type': 'application/json'
       }
       }).success(function(response) {
-        StorageService.set(email);
+        StorageService.set(authId);
         $state.go("main");
       });
     });

@@ -41,25 +41,8 @@ angular.module('App')
     });
   }
   $scope.getChat();
-  // $http({
-  //   method: 'POST' ,
-  //   url: HttpServ.url+'/getChat',
-  //   data: {
-  //     pid: PresentPid.get()
-  //   },
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   }
-  // }).success(function(messages) {
-  //   for (var i = 0; i < messages.length; i++) {
-  //     $scope.messages.unshift(messages[i]);
-  //   }
-  //   $ionicScrollDelegate.resize();
-  //   $ionicScrollDelegate.scrollBottom();
-  // });
 
   MySocket.on('chatMessage', function(message){
-    console.log('message : '+message.id+' '+message.content);
     $scope.messages.push(message);
     $ionicScrollDelegate.resize();
     $ionicScrollDelegate.scrollBottom();
@@ -110,3 +93,13 @@ angular.module('App')
     $ionicScrollDelegate.scrollBottom();
   }
 })
+
+.filter('datetime', function($filter)
+{
+ return function(input)
+ {
+  if(input == null){ return ""; }
+  var _date = $filter('date')(new Date(input), 'yyyy-MM-dd HH:mm:ss');
+  return _date.toUpperCase();
+ };
+});

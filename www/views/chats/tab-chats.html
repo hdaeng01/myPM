@@ -17,7 +17,7 @@
           <div class="messagee" ng-class="{'slide-right': hideTime}">
             <div ng-if="m.id!=myId">{{m.sender}}</div>
             <span> {{m.content}} </span>
-            <p>{{m.created}}</p>
+            <p>{{m.created | datetime}}</p>
           </div>
         </div>
 
