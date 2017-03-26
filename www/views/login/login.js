@@ -1,16 +1,9 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $state, $ionicPush, StorageService, HttpServ, MyInfo) {
-  StorageService.removeAll();
+.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ) {
+  // StorageService.removeAll();
   if (StorageService.get()!=null) {
     $state.go("main");
   }
-
-  $ionicPush.register().then(function(t) {
-    return $ionicPush.saveToken(t);
-  }).then(function(t) {
-    MyInfo.setToken(t.token);
-    console.log('Token saved:'+ t.token);
-  });
 
   $scope.showModal = function(){
     if ($scope.modal) {
@@ -68,7 +61,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: '/login',
+    url: HttpServ.url+'/auth/login',
     data: {
       username: $scope.username,
       password: $scope.password
