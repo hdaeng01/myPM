@@ -1,9 +1,16 @@
 angular.module('App')
-.controller('LoginCtrl', function($scope, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ) {
+.controller('LoginCtrl', function($scope, $ionicPush, $ionicAuth, $ionicUser, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ, MyInfo) {
   // StorageService.removeAll();
   if (StorageService.get()!=null) {
     $state.go("main");
   }
+
+  $ionicPush.register().then(function(t) {  //처음 앱이 시작되면 해당 핸드폰을 구별하는 token이 생성된다.
+    return $ionicPush.saveToken(t);
+  }).then(function(t) {
+    MyInfo.setToken(t.token);
+    console.log('Token saved:'+ t.token);
+  });
 
   $scope.showModal = function(){
     if ($scope.modal) {
@@ -64,7 +71,8 @@ angular.module('App')
     url: HttpServ.url+'/auth/login',
     data: {
       username: $scope.username,
-      password: $scope.password
+      password: $scope.password,
+      oAuth: 'local'
     },
     headers: {
       'Content-Type': 'application/json'
@@ -76,6 +84,34 @@ angular.module('App')
         StorageService.set($scope.username);
         $state.go("main");
       }
+    });
+  }
+
+  $scope.logFacebook = function(){  //서버 모든 email확인을 authId로 바꾸자.
+    $ionicAuth.login('facebook').then(function(){
+      var uid = $ionicUser.social.facebook.uid;
+      var full_name = $ionicUser.social.facebook.data.full_name;
+      var profile_picture = $ionicUser.social.facebook.data.profile_picture;
+      var facebook_raw_data = $ionicUser.social.facebook.data.raw_data;
+      var email = $ionicUser.social.facebook.data.email;
+      var authId = 'facebook:'+email
+
+      $http({
+      method: 'POST' ,
+      url: HttpServ.url+'/auth/login',
+      data: {
+        username: email,
+        password: ' ',
+        oAuth: 'facebook',
+        name: full_name
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+      }).success(function(response) {
+        StorageService.set(email);
+        $state.go("main");
+      });
     });
   }
 })

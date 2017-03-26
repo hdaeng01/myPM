@@ -11,7 +11,7 @@ angular.module('App.factories', ['ngResource']);
 angular.module('App.directives', ['App.constants', 'App.services', 'ionic']);
 angular.module('App.services', ['App.constants', 'App.factories']);
 angular.module('App.controllers', ['App.services', 'ionic']);
-angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth', 'ngStorage', 'ion-floating-menu', 'ionic.cloud', 'App.controllers', 'App.services', 'App.constants', 'App.directives'])
+angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngStorage', 'ion-floating-menu', 'ionic.cloud', 'App.controllers', 'App.services', 'App.constants', 'App.directives'])
 
 .run(function($ionicPlatform) {
 
@@ -29,7 +29,8 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
 
 .config(function($stateProvider, $urlRouterProvider, $ionicCloudProvider) {
 
-  $ionicCloudProvider.init({
+  $ionicCloudProvider
+  .init({
     "core": {
       "app_id": "4c9ab9c0"
     },
@@ -44,6 +45,11 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngCordovaOauth
         "android": {
           "iconColor": "#343434"
         }
+      }
+    },
+    "auth": {
+      "facebook": {
+        "scope": ["email","public_profile"]
       }
     }
   })
