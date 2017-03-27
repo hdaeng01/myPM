@@ -1,9 +1,10 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, $state, $ionicPush, $ionicNavBarDelegate, $ionicHistory, $http, Projects, PresentPid, MyInfo, Board, push, HttpServ, StorageService) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, $state, $ionicPush, $ionicNavBarDelegate, $ionicHistory, $http, $ionicLoading, Projects, PresentPid, MyInfo, Board, push, HttpServ, StorageService) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
   MyInfo.setId(StorageService.get());
 
+  $ionicLoading.show();
   $http({
     method: 'POST' ,
     url: HttpServ.url+'/getMyInfo',
@@ -19,6 +20,12 @@ angular.module('App')
     for (var i = 0; i < info.projects.length; i++) {
       Projects.add(info.projects[i].pid, info.projects[i].pname);
     }
+    $ionicLoading.hide();
+  }).error(function(err){
+    $ionicLoading.show({
+      template: 'Could not load project. Please try again later.',
+      duration: 3000
+    });
   })
 
   $scope.showModal = function(){

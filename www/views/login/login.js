@@ -1,6 +1,6 @@
 angular.module('App')
 .controller('LoginCtrl', function($scope, $ionicPush, $ionicAuth, $ionicUser, $http, $stateParams, $ionicModal, $state, StorageService, HttpServ, MyInfo) {
-  StorageService.removeAll();
+  // StorageService.removeAll();
   if (StorageService.get()!=null) {
     $state.go("main");
   }
@@ -68,7 +68,7 @@ angular.module('App')
 
     $http({
     method: 'POST' ,
-    url: '/login',
+    url: HttpServ.url+'/auth/login/',
     data: {
       username: $scope.username,
       password: $scope.password,
