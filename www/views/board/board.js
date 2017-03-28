@@ -55,7 +55,7 @@ angular.module('App')
   $scope.addBoard = function(){
     var subject = this.subject;
     var content = this.content;
-
+    console.log(MyInfo.getMyName());
     $http({
       method: 'POST' ,
       url: HttpServ.url+'/addBoard',
@@ -119,10 +119,10 @@ angular.module('App')
       headers: {
         'Content-Type': 'application/json'
       }
-    }).success(function(comments) {
-      angular.forEach(comments, function(comment){
-        $scope.comments.push(comment);
-      })
+    }).success(function(comment) {
+      comment.name = MyInfo.getMyName();
+      console.log(comment);
+      $scope.comments.push(comment);
     })
     this.comment = ' ';
   }

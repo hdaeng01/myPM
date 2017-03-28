@@ -4,7 +4,7 @@ angular.module('App')
   $ionicNavBarDelegate.showBackButton(false);
   MyInfo.setId(StorageService.get());
 
-  $ionicLoading.show();
+
   $http({
     method: 'POST' ,
     url: HttpServ.url+'/getMyInfo',
@@ -17,16 +17,12 @@ angular.module('App')
     }
   }).success(function(info) {
     MyInfo.setName(info.name);
+    console.log(info);
     for (var i = 0; i < info.projects.length; i++) {
       Projects.add(info.projects[i].pid, info.projects[i].pname);
     }
-    $ionicLoading.hide();
-  }).error(function(err){
-    $ionicLoading.show({
-      template: 'Could not load project. Please try again later.',
-      duration: 3000
-    });
-  })
+
+  });
 
   $scope.showModal = function(){
     if ($scope.modal) {
@@ -99,6 +95,7 @@ angular.module('App')
     $ionicHistory.clearHistory();
     $ionicHistory.clearCache();
 
+    $ionicLoading.show();
     $http({
       method: 'POST' ,
       url: HttpServ.url+'/getBoard',
@@ -113,7 +110,13 @@ angular.module('App')
       for (var i = 0; i < board.length; i++) {
         Board.set(board[i].id, board[i].time, board[i].subject, board[i].name, board[i].hits, board[i].comments);
       }
+      $ionicLoading.hide();
       $state.go('tabs.board',{pid:pid});
+    }).error(function(err){
+      $ionicLoading.show({
+        template: 'Could not load project. Please try again later.',
+        duration: 3000
+      });
     });
   }
 })

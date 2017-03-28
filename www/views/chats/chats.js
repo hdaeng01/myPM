@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $state, $timeout, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid) {
+.controller('ChatsCtrl', function($scope, $ionicScrollDelegate, $stateParams, $state, $timeout, $http, HttpServ, Projects, MySocket, MyInfo, PresentPid, dateServ) {
   $scope.messages = [];
   $scope.myId = MyInfo.getMyId();
   PresentPid.set($stateParams.pid);
@@ -76,7 +76,9 @@ angular.module('App')
     MySocket.removeListener('chatMessage');
   });
 
+  $scope.format = dateServ.format;
   $scope.pushMessage = function(message){
+    console.log(message.id);
     $scope.messages.push(message);
     $ionicScrollDelegate.resize();
     $ionicScrollDelegate.scrollBottom();
