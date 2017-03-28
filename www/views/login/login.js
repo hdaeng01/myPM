@@ -99,7 +99,7 @@ angular.module('App')
 
       $http({
       method: 'POST' ,
-      url: HttpServ.url+'/auth/login',
+      url: '/login',
       data: {
         username: email,
         password: ' ',

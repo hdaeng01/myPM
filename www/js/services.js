@@ -25,12 +25,12 @@ angular.module('App.factories',[])
 
 .factory('HttpServ', function(){
   return {
-    url : 'http://192.168.1.102:3000'
+    url : 'http://192.168.1.100:8080'
   }
 })
 
 .factory('MySocket', function (socketFactory, HttpServ) {
-  var myIoSocket = io.connect('http://192.168.1.102:3001');
+  var myIoSocket = io.connect('http://192.168.1.100:8080');
 
   mySocket = socketFactory({
     ioSocket: myIoSocket

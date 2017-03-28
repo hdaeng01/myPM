@@ -4,15 +4,15 @@
   "proxies": [
     {
       "path": "/register",
-      "proxyUrl": "http://192.168.1.102:3000/auth/register/"
+      "proxyUrl": "http://192.168.1.100:8080/auth/register/"
     },
     {
       "path": "/login",
-      "proxyUrl": "http://192.168.1.102:3000/auth/login/"
+      "proxyUrl": "http://192.168.1.100:8080/auth/login/"
     },
     {
       "path": "/welcome",
-      "proxyUrl": "http://192.168.1.102:3000/welcome/"
+      "proxyUrl": "http://192.168.1.100:3000/welcome/"
     },
     {
       "path": "/loginError",

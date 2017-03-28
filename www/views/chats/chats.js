@@ -26,6 +26,7 @@ angular.module('App')
         'Content-Type': 'application/json'
       }
     }).success(function(messages) {
+      console.log(messages);
       for (var i = 0; i < messages.length; i++) {
         $scope.messages.unshift(messages[i]);
       }
@@ -78,7 +79,6 @@ angular.module('App')
 
   $scope.format = dateServ.format;
   $scope.pushMessage = function(message){
-    console.log(message.id);
     $scope.messages.push(message);
     $ionicScrollDelegate.resize();
     $ionicScrollDelegate.scrollBottom();

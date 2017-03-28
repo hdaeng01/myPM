@@ -14,7 +14,7 @@
       <ion-refresher on-refresh="getChat()" pulling-text="Loding..."></ion-refresher>
       <div class="chatContent">
         <div ng-repeat="m in messages track by $index" ng-class="{'other': m.id == myId}" class="messages">
-          <div class="messagee" ng-class="{'slide-right': hideTime}">
+          <div class="messagee" ng-class="{'slide-right': m.id == myId}">
             <div ng-if="m.id!=myId">{{m.sender}}</div>
             <span> {{m.content}} </span>
             <p>{{m.created | datetime}}</p>
