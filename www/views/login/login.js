@@ -5,9 +5,11 @@ angular.module('App')
     $state.go("main");
   }
 
+  var _token;
   $ionicPush.register().then(function(t) {  //처음 앱이 시작되면 해당 핸드폰을 구별하는 token이 생성된다.
     return $ionicPush.saveToken(t);
   }).then(function(t) {
+    _token = t.token;
     MyInfo.setToken(t.token);
     console.log('Token saved:'+ t.token);
   });
@@ -67,16 +69,17 @@ angular.module('App')
     $scope.password = this.password;
 
     $http({
-    method: 'POST' ,
-    url: '/login',
-    data: {
-      username: $scope.username,
-      password: $scope.password,
-      oAuth: 'local'
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    }
+      method: 'POST' ,
+      url: '/login',
+      data: {
+        username: $scope.username,
+        password: $scope.password,
+        token: _token,
+        oAuth: 'local'
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }).success(function(response) {
       if (response == '해당정보없음') {
         alert('해당정보 없음.');
@@ -99,7 +102,7 @@ angular.module('App')
 
       $http({
       method: 'POST' ,
-      url: '/login',
+      url: HttpServ.url+'/auth/login',
       data: {
         username: email,
         password: ' ',

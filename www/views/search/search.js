@@ -10,18 +10,17 @@ angular.module('App')
         url: HttpServ.url+'/searchProject',
         data: {
           pid: $scope.pid,
-          id: MyInfo.getMyId()
+          id: MyInfo.getMyId(),
+          name: MyInfo.getMyName()
         },
         headers: {
           'Content-Type': 'application/json'
         }
-      }).success(function(project) {
-        if(project.being){
-          Projects.add(project.pid, project.pname);
-          $state.go('main');
-        }
-        else {
-          alert('존재하지 않은 프로젝트입니다');
+      }).success(function(result) {
+        if(result=="해당프로젝트없음") alert("해당프로젝트없음")
+        else if(result=="가입요청"){
+          alert("가입요청")
+          $state.go("main");
         }
       })
     }

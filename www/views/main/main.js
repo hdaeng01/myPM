@@ -4,13 +4,12 @@ angular.module('App')
   $ionicNavBarDelegate.showBackButton(false);
   MyInfo.setId(StorageService.get());
 
-
+  $ionicLoading.show();
   $http({
     method: 'POST' ,
     url: HttpServ.url+'/getMyInfo',
     data: {
-      id: MyInfo.getMyId(),
-      token: MyInfo.getMyToken()
+      id: MyInfo.getMyId()
     },
     headers: {
       'Content-Type': 'application/json'
@@ -21,7 +20,12 @@ angular.module('App')
     for (var i = 0; i < info.projects.length; i++) {
       Projects.add(info.projects[i].pid, info.projects[i].pname);
     }
-
+    $ionicLoading.hide();
+  }).error(function(err){
+    $ionicLoading.show({
+      template: 'Could not load project. Please try again later.',
+      duration: 3000
+    });
   });
 
   $scope.showModal = function(){

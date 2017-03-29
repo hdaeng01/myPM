@@ -122,6 +122,11 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngStorage', 'i
       templateUrl: 'views/search/search.html',
       controller: 'SearchCtrl'
     })
+    .state('request', {
+      url: '/request',
+      templateUrl: 'views/request/request.html',
+      controller: 'RequestCtrl'
+    })
     .state('info', {
       url : '/info/:pid',
       templateUrl : 'views/info/tab-info.html',
