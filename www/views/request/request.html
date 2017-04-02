@@ -1,12 +1,20 @@
-<ion-view view-title="방찾기">
+<ion-view view-title="가입요청">
+  <ion-nav-buttons side="left">
+    <button class="button button-clear" menu-toggle="left">
+      <span class="icon ion-navicon"></span>
+    </button>
+  </ion-nav-buttons>
   <ion-content>
-    <div class="list">
-      <div class="item item-input-inset">
-        <label class="item-input-wrapper">
-          <input type="text" ng-model="pid"/>
-        </label>
-        <button class="button button-small button-positive" ng-click="searchRoom()">찾기</button>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="teammate in teammates" type="item-text-wrap">
+        <h2>PNAME : {{teammate.pname}}({{teammate.pid}})</h2>
+        <h2>아이디 : {{teammate.id}}</h2>
+        <h2>이름 : {{teammate.name}}</h2>
+      <div class="button-bar">
+        <button class="button button-positive" ng-click="approval(teammate)" style="background-color: green;">승인</button>
+        <button class="button button-positive" ng-click="denial(teammate)" style="background-color: red">거절</button>
       </div>
-    </div>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

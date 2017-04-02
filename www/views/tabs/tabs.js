@@ -1,5 +1,5 @@
 angular.module('App')
-.controller('TabCtrl', function($scope, $rootScope, $stateParams, $state, PresentPid, $http, $cordovaFile, Board, push, HttpServ) {
+.controller('TabCtrl', function($scope, $rootScope, $stateParams, $state, PresentPid, $http, $cordovaFile, Board, push, HttpServ, Projects) {
   $rootScope.$on('cloud:push:notification', function(event, data) {
     var msg = data.message;
     var str = msg.text.split(' ');
@@ -23,6 +23,15 @@ angular.module('App')
         }
         $state.go('tabs.board',{pid:pid});
       });
+    } else if(str[2]=='가입을'){
+      var start = str[0].charAt('(');
+      var end = str[0].charAt(')');
+      var pname = str[0].substring(0, start);
+      var slice = str[0].substring(start, end);
+      $rootScope.$apply(function(){
+        Projects.add(pid, pname);
+      });
+      $state.go('main');
     } else{
       var pid = str[0].substring(str[0].length-9,str[0].length-1);
       PresentPid.set(pid);

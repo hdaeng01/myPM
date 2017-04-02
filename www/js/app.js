@@ -123,6 +123,7 @@ angular.module('App', ['ionic', 'btford.socket-io', 'ngCordova', 'ngStorage', 'i
       controller: 'SearchCtrl'
     })
     .state('request', {
+      cache: false,
       url: '/request',
       templateUrl: 'views/request/request.html',
       controller: 'RequestCtrl'

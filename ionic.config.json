@@ -4,7 +4,7 @@
   "proxies": [
     {
       "path": "/register",
-      "proxyUrl": "http://192.168.0.4:8080/auth/register/"
+      "proxyUrl": "http://192.168.1.100:8080/auth/register/"
     },
     {
       "path": "/login",
