@@ -1,8 +1,50 @@
 angular.module('App')
-.controller('MainCtrl', function($scope, $stateParams, $ionicModal, $state, $ionicPush, $ionicNavBarDelegate, $ionicHistory, $http, $ionicLoading, Projects, PresentPid, MyInfo, Board, push, HttpServ, StorageService) {
+.controller('MainCtrl', function($scope, $stateParams, $ionicModal, $state, $ionicPush, $ionicNavBarDelegate, $ionicHistory, $http, $ionicLoading, $rootScope, Projects, PresentPid, MyInfo, Board, push, HttpServ, StorageService) {
   $scope.roomName='';
   $ionicNavBarDelegate.showBackButton(false);
   MyInfo.setId(StorageService.get());
+
+  $rootScope.$on('cloud:push:notification', function(event, data) {
+    var msg = data.message;
+    var str = msg.text.split(' ');
+    if(str[3]=='게시물이'){
+      var pid = str[0].substring(str[0].length-9,str[0].length-1);
+      PresentPid.set(pid);
+      Board.setEmpty();
+      $http({
+        method: 'POST' ,
+        url: HttpServ.url+'/getBoard',
+        data: {
+          pid: pid
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).success(function(result) {
+        var board = result;
+        for (var i = 0; i < board.length; i++) {
+          Board.set(board[i].id, board[i].time, board[i].subject, board[i].name, board[i].hits, board[i].comments);
+        }
+        $state.go('tabs.board',{pid:pid});
+      });
+    } else if(str[2]=='가입을'){
+      var start = str[0].indexOf('(');
+      var end = str[0].indexOf(')');
+      var pname = str[0].slice(0, start);
+      var pid = str[0].slice(start+1, end);
+      $rootScope.$apply(function(){
+        Projects.add(pid, pname);
+      });
+
+      $state.go('main');
+    } else{
+      var pid = str[0].substring(str[0].length-9,str[0].length-1);
+      PresentPid.set(pid);
+      $state.go('tabs.chats',{pid:pid});
+    }
+    push.set(msg);
+    var tmp = push.get();
+  });
 
   $ionicLoading.show();
   $http({

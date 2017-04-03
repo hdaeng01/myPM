@@ -60,6 +60,7 @@
 }
 
 .messages.other .messagee.slide-right {
+    display:block;
     -webkit-transform: translate3d(110px, 0, 0) !important;
     -moz-transform: translate3d(110px, 0, 0) !important;
     transform: translate3d(110px, 0, 0) !important;

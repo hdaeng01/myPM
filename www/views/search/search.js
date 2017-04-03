@@ -20,7 +20,6 @@ angular.module('App')
         if(result=="해당프로젝트없음") alert("해당프로젝트없음")
         else if(result=="가입요청"){
           alert("가입요청")
-          $state.go("main");
         }
       })
     }
